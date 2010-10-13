@@ -8,7 +8,7 @@
  * @see  http://kohanaframework.org/guide/using.configuration
  * @see  http://php.net/timezones
  */
-date_default_timezone_set('America/Chicago');
+date_default_timezone_set('Europe/Warsaw');
 
 /**
  * Set the default locale.
@@ -16,7 +16,7 @@ date_default_timezone_set('America/Chicago');
  * @see  http://kohanaframework.org/guide/using.configuration
  * @see  http://php.net/setlocale
  */
-setlocale(LC_ALL, 'en_US.utf-8');
+setlocale(LC_ALL, 'pl_PL.utf-8');
 
 /**
  * Enable the Kohana auto-loader.
@@ -59,8 +59,11 @@ if (isset($_ENV['KOHANA_ENV']))
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-	'base_url'   => '/',
-));
+            'base_url' => '/',
+            'profile' => Kohana::$environment !== Kohana::PRODUCTION,
+            'caching' => Kohana::$environment === Kohana::PRODUCTION,
+            'index_file' => FALSE   // blokuje wyświetlanie index.php w url: www.exmpl.com/index.php/controller/
+        ));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
