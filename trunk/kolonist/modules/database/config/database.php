@@ -17,10 +17,10 @@ return array
 			 *
 			 * Ports and sockets may be appended to the hostname.
 			 */
-			'hostname'   => 'localhost',
-			'database'   => 'kohana',
-			'username'   => FALSE,
-			'password'   => FALSE,
+			'hostname'   => 'sql.edyska.nazwa.pl',
+			'database'   => 'edyska_9',
+			'username'   => 'edyska_9',
+			'password'   => 'KOlonist000',
 			'persistent' => FALSE,
 		),
 		'table_prefix' => '',
