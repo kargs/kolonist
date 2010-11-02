@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Kolonist | The best game ty ever widział</title>
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
+        <link href="css/map.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+        <script type="text/javascript" src="js/game.js"></script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="top">
+                <div id="menu">
+                    <ul>
+                        <li><a href="#">Świat</a></li>
+                        <li><a href="#">Provincja</a></li>
+                    </ul>
+                </div>
+                <div id="infobar">
+                    <div class="material">
+                        Kasza manna
+                    </div>
+                    <div class="separator"></div>
+                    <div class="material">
+                        Osadnicy
+                    </div>
+                    <div class="separator"></div>
+                    <div class="material">
+                        Cegły
+                    </div>
+                    <div class="separator"></div>
+                    <div class="material">
+                        Drągi
+                    </div>
+                    <a href="javascript:showProvince(2);">Pokaż prowincję</a>
+                    <input type="text" id="px" size="3" />
+                    <input type="text" id="py" size="3" />
+                    <input type="button" id="btn" value="Go" />
+                    <input type="text" id="inc" size="3" value="10" />
+                    <input type="button" id="left" value="left" />
+                    <input type="button" id="right" value="right" />
+                    <input type="button" id="up" value="up" />
+                    <input type="button" id="down" value="down" />
+                </div>
+            </div>
+            <div id="map">&nbsp;</div>
+            <div id="maparea">
+                <img src="graph/transparent.png" alt="" usemap="#mapareaitems" />
+                <map id="mapareaitems" name="mapareaitems"></map>
+            </div>
+<!--            <div id="mapdrag"></div>-->
+        </div>
+        <div id="provinceView">
+            <div>To jest widok prowincji i takie tam inne bajery</div>
+            <p>Kliknij
+                <a href="javascript:showBuilding();">tutaj</a>.
+            </p>
+        </div>
+        <div id="buildingSelected">
+            <p>Wybrano jakiś budynek</p>
+        </div>
+    </body>
+</html>
