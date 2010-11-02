@@ -21,11 +21,10 @@ $(function() {
             var y = radiusTmp * Math.sin(alfa);
             x += centerX - $(obj).innerWidth()/2;
             y += centerY - $(obj).innerHeight()/2;
-            $(obj).animate({
+            $(obj).delay(i*50).animate({
                 left: x,
                 top: y,
-                opacity: 1,
-                start: i*100
+                opacity: 1
             });
         });
 

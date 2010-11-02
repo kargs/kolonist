@@ -8,4 +8,4 @@ Hasło dostępu:	KOlonist000
 
 Panel zarządzania bazą danych: https://sql.edyska.nazwa.pl/mysql5/
 
-Kohana zostaøa skonfigurowana, do pracy z ta baza danych.
+Kohana została skonfigurowana, do pracy z ta baza danych.
