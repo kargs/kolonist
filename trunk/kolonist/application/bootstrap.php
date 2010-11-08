@@ -62,13 +62,14 @@ Kohana::init(array(
             'base_url' => '/',
             'profile' => Kohana::$environment !== Kohana::PRODUCTION,
             'caching' => Kohana::$environment === Kohana::PRODUCTION,
+			'cache_dir' => WRPATH.'cache',
             'index_file' => FALSE   // blokuje wyświetlanie index.php w url: www.exmpl.com/index.php/controller/
         ));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
-Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
+Kohana::$log->attach(new Kohana_Log_File(WRPATH.'logs'));
 
 /**
  * Attach a file reader to config. Multiple readers are supported.
