@@ -24,6 +24,12 @@ $modules = '../modules';
 $system = '../system';
 
 /**
+ * The directory with writable rights, not accessible from public.
+ */
+$writable = '../writable';
+
+
+/**
  * The default extension of resource files. If you change this, all resources
  * must be renamed to use the new extension.
  *
@@ -68,13 +74,18 @@ if ( ! is_dir($modules) AND is_dir(DOCROOT.$modules))
 if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
 	$system = DOCROOT.$system;
 
+// Make the writeable relative to the docroot
+if ( ! is_dir($writable) AND is_dir(DOCROOT.$writable))
+	$writable = DOCROOT.$writable;
+
 // Define the absolute paths for configured directories
 define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
 define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
+define('WRPATH', realpath($writable).DIRECTORY_SEPARATOR);
 
 // Clean up the configuration vars
-unset($application, $modules, $system);
+unset($application, $modules, $system, $writable);
 
 if (file_exists('install'.EXT))
 {
