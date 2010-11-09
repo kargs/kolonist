@@ -46,6 +46,10 @@ abstract class Controller_Default extends Controller_Template {
 			} catch (Exception $e) {}
 		}
 
+		// Form data is stored there
+		$this->view->errors = array();
+		$this->view->values = array();
+
 		$this->template->content = $this->view;
 	}
 }

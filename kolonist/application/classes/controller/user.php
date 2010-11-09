@@ -31,6 +31,7 @@ class Controller_User extends Controller_Default {
 				Request::instance()->redirect('welcome');
 			} else {
 				$this->view->errors = $post->errors('register');
+				$this->view->values = array_merge($post->as_array(), array('password' => '', 'password_confirm' => ''));
 			}
 		}
 	}
