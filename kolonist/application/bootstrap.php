@@ -81,11 +81,12 @@ Kohana::$config->attach(new Kohana_Config_File);
  */
 Kohana::modules(array(
 	'database'   => MODPATH.'database',
-	'jelly'      => MODPATH.'jelly',
-	'jelly-auth' => MODPATH.'jelly-auth',
+//	'formo'      => MODPATH.'formo',
+//	'formo-jelly'=> MODPATH.'formo-jelly',
+//	'jelly'      => MODPATH.'jelly',
+//	'jelly-auth' => MODPATH.'jelly-auth',
+	'orm'        => MODPATH.'orm',
 	'auth'       => MODPATH.'auth',
-	'formo'      => MODPATH.'formo',
-	'formo-jelly'=> MODPATH.'formo-jelly',
 	'userguide'  => MODPATH.'userguide',
 ));
 
