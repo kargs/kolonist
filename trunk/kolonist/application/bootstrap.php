@@ -80,22 +80,26 @@ Kohana::$config->attach(new Kohana_Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
-	// 'auth'       => MODPATH.'auth',       // Basic authentication
-	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
-	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
-	// 'database'   => MODPATH.'database',   // Database access
-	// 'image'      => MODPATH.'image',      // Image manipulation
-	// 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
-	// 'oauth'      => MODPATH.'oauth',      // OAuth authentication
-	// 'pagination' => MODPATH.'pagination', // Paging of results
-	// 'unittest'   => MODPATH.'unittest',   // Unit testing
-	// 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
-	));
+	'database'   => MODPATH.'database',
+	'jelly'      => MODPATH.'jelly',
+	'jelly-auth' => MODPATH.'jelly-auth',
+	'auth'       => MODPATH.'auth',
+	'formo'      => MODPATH.'formo',
+	'formo-jelly'=> MODPATH.'formo-jelly',
+	'userguide'  => MODPATH.'userguide',
+));
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
+
+Route::set('admin', 'admin(/<action>(/<param>(/<id>)))')
+	->defaults(array(
+		'controller' => 'admin',
+		'action'     => 'index',
+));
+
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'welcome',
