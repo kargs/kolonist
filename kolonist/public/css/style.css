@@ -1,1 +1,103 @@
+body
+{
+    margin:0;
+    padding: 0;
+    background: url(../graphics/tloM.png) repeat;
+    text-align: center;
+}
 
+.mainWrapper
+{
+    width:813px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.wrapper
+{
+    background: url(../graphics/mapa.png) bottom no-repeat;
+}
+
+.logo
+{
+    background: url(../graphics/top.png) bottom no-repeat;
+    height: 360px;
+}
+
+.mainContent
+{
+    height: 200px;
+    clear: both;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.footer
+{
+    height: 300px;
+    filter:alpha(opacity=60);
+    opacity: 0.6;
+    -moz-opacity: 0.6;
+
+}
+
+.menu
+{
+    margin:0;
+    padding: 0;
+    margin-left: 100px;
+    margin-top: -50px;
+    height: 50px;
+    list-style: none;
+}
+
+.menu a
+{
+    display: block;
+    text-decoration: none;
+    width: 110px;
+    height: 40px;
+    margin-right: 55px;
+    filter: alpha(opacity=99);
+    -moz-opacity: 0.99;
+    opacity: 0.99;
+}
+.menu a:hover {
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.80;
+    opacity: 0.80;
+}
+
+.menu li
+{
+    float: left;
+    text-decoration: none;
+}
+
+
+#account
+{
+    background: url(../graphics/konto.png);
+}
+
+#rules
+{
+    background: url(../graphics/zasady.png);
+}
+
+#screens
+{
+    background: url(../graphics/screens.png);
+}
+
+#start
+{
+    background: url(../graphics/start.png);
+}
+
+
+div.mainContent div.fieldbundle label {
+    display: inline-block;
+    width: 130px;
+}
