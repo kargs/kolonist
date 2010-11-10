@@ -1,4 +1,4 @@
-<?php form::$errors = isset ($errors) ? $error : null ?>
+<?php form::$errors = isset ($errors) ? $errors : null ?>
 <?php form::$values = isset ($values) ? $values : null ?>
 
 <?php echo form::open('user/login') ?>
