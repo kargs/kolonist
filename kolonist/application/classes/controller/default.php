@@ -1,5 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Basic controller for all controllers which output HTML. Defines and checks
+ * access rules for particular actions or whole controller, automatically
+ * resolves and loads view.
+ */
 abstract class Controller_Default extends Controller_Template {
 
 	const ACCESS_ANYONE = -1;
@@ -50,6 +55,10 @@ abstract class Controller_Default extends Controller_Template {
 		$this->view->errors = array();
 		$this->view->values = array();
 
-		$this->template->content = $this->view;
+		if (isset($_GET['nolayout'])) {
+			$this->template = $this->view;
+		} else {
+			$this->template->content = $this->view;
+		}
 	}
 }

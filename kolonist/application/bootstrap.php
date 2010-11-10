@@ -59,12 +59,12 @@ if (isset($_ENV['KOHANA_ENV']))
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-            'base_url' => '/',
-            'profile' => Kohana::$environment !== Kohana::PRODUCTION,
-            'caching' => Kohana::$environment === Kohana::PRODUCTION,
-			'cache_dir' => WRPATH.'cache',
-            'index_file' => FALSE   // blokuje wyświetlanie index.php w url: www.exmpl.com/index.php/controller/
-        ));
+	'base_url' => '/',
+	'profile' => Kohana::$environment !== Kohana::PRODUCTION,
+	'caching' => Kohana::$environment === Kohana::PRODUCTION,
+	'cache_dir' => WRPATH.'cache',
+	'index_file' => FALSE   // blokuje wyświetlanie index.php w url: www.exmpl.com/index.php/controller/
+));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
@@ -81,10 +81,6 @@ Kohana::$config->attach(new Kohana_Config_File);
  */
 Kohana::modules(array(
 	'database'   => MODPATH.'database',
-//	'formo'      => MODPATH.'formo',
-//	'formo-jelly'=> MODPATH.'formo-jelly',
-//	'jelly'      => MODPATH.'jelly',
-//	'jelly-auth' => MODPATH.'jelly-auth',
 	'orm'        => MODPATH.'orm',
 	'auth'       => MODPATH.'auth',
 	'userguide'  => MODPATH.'userguide',
@@ -98,6 +94,12 @@ Kohana::modules(array(
 Route::set('admin', 'admin(/<action>(/<param>(/<id>)))')
 	->defaults(array(
 		'controller' => 'admin',
+		'action'     => 'index',
+));
+
+Route::set('info', 'info(/<page>)')
+	->defaults(array(
+		'controller' => 'info',
 		'action'     => 'index',
 ));
 

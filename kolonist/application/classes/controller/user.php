@@ -7,7 +7,7 @@ class Controller_User extends Controller_Default {
 		'index'    => Controller_Default::ACCESS_ANYONE,
 		'register' => Controller_Default::ACCESS_GUEST,
 		'login'    => Controller_Default::ACCESS_GUEST,
-		'logout'    => Controller_Default::ACCESS_ANYONE,
+		'logout'   => Controller_Default::ACCESS_ANYONE,
 	);
 
 	public function action_index() {
@@ -17,22 +17,22 @@ class Controller_User extends Controller_Default {
 	function action_register() {
 		if ($_POST) {
 			$user = ORM::factory('user');
-			$post = $user->validate_create($_POST);
+			$_POST = $user->validate_create($_POST);
 
-			if ($post->check()) {
-				$user->values($post);
+			if ($_POST->check()) {
+				$user->values($_POST);
 
 				$user->save();
 
 				$login_role = new Model_Role(array('name' => 'login'));
 				$user->add('roles', $login_role);
 
-				Auth::instance()->login($post['username'], $post['password']);
+				Auth::instance()->login($_POST['username'], $_POST['password']);
 
 				Request::instance()->redirect('welcome');
 			} else {
-				$this->view->errors = $post->errors('register');
-				$this->view->values = array_merge($post->as_array(), array('password' => '', 'password_confirm' => ''));
+				$this->view->errors = $_POST->errors('register');
+				$this->view->values = array_merge($_POST->as_array(), array('password' => '', 'password_confirm' => ''));
 			}
 		}
 	}
@@ -45,6 +45,7 @@ class Controller_User extends Controller_Default {
 				Request::instance()->redirect('welcome');
 			} else {
 				$this->view->errors = $_POST->errors('login');
+				$this->view->values = array_merge($_POST->as_array(), array('password' => ''));
 			}
 		}
 	}
