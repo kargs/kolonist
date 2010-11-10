@@ -1,7 +1,7 @@
-<?php form::$errors = $errors ?>
-<?php form::$values = $values ?>
+<?php form::$errors = isset ($errors) ? $error : null ?>
+<?php form::$values = isset ($values) ? $values : null ?>
 
-<?php echo form::open() ?>
+<?php echo form::open('user/login') ?>
 <?php echo form::field('username', 'Username', 'input') ?>
 <?php echo form::field('password', 'Password', 'password') ?>
 <?php echo form::submit('submit','Login') ?>

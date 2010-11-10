@@ -7,8 +7,6 @@ div.ball_item {
     height: 50px;
 /*    margin: auto auto;*/
     position: absolute;
-    top: 50px;
-    right: 100px;
     padding: 50px;
 }
 div.ball_content {

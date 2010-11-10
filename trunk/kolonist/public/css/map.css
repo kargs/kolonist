@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0px;
+    background-color: darkorange;
 }
 div#wrapper {
     position: fixed;
@@ -35,11 +36,11 @@ div#wrapper {
 
 
 
-/*Mapa*/
+/*-- Mapa --*/
 div#map {
     width: 100%;
     height: 100%;
-    background-color: darkorange;
+    position: absolute;
 }
 div#map img.province {
     position: absolute;
@@ -56,7 +57,7 @@ div#maparea {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 5555;
+    z-index: 555;
     top: 0px;
     left: 0px;
 }
@@ -70,8 +71,65 @@ div#mapdrag {
     height: 150%;
     top: 0px;
     left: 0px;
-    z-index: 7777;
+    z-index: 777;
+    filter:alpha(opacity=60);
+    opacity: 0.6;
+    -moz-opacity: 0.6;
+    background: lime;
+    display: none;
 }
+
+/*-- koniec Mapa --*/
+
+/*-- Widok prowincji --*/
+div#provinceView {
+}
+
+/*-- koniec Widok prowincji --*/
+
+/*-- Ball Menu --*/
+div#mapMenuBall {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 666;
+}
+/*-- koniec Ball Menu --*/
+
+div.provinceDetail {
+    background: url(../graph/province_bg.png);
+    width: 100%;
+    height: 100%;
+}
+
+
+/*-- ball menu przy widoku prowincji --*/
+div.slot {
+    position: absolute;
+}
+div#slot1 {
+    left: 300px;
+    top: 20px;
+}
+div#slot2 {
+    left: 610px;
+    top: 150px;
+}
+div#slot3 {
+    left: 460px;
+    top: 300px;
+}
+div#slot4 {
+    left: 150px;
+    top: 300px;
+}
+div#slot5 {
+    left: 10px;
+    top: 150px;
+}
+/*-- /koniec ball menu przy widoku prowincji --*/
+
+
 
 /*Nadpisanie JQuery UI*/
 body div.ui-widget-overlay {

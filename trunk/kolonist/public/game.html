@@ -5,9 +5,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Kolonist | The best game ty ever widział</title>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
-        <link href="css/map.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+
+        <link type="text/css" href="css/ball_menu.css" rel="stylesheet" />
+        <script type="text/javascript" src="js/ball_menu.js"></script>
+
+        <link href="css/map.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="js/game.js"></script>
     </head>
     <body>
@@ -35,6 +39,7 @@
                     <div class="material">
                         Drągi
                     </div>
+                    <a class="moveHandle" href="#">Przeciągnij</a>
                     <a href="javascript:showProvince(2);">Pokaż prowincję</a>
                     <input type="text" id="px" size="3" />
                     <input type="text" id="py" size="3" />
@@ -51,13 +56,17 @@
                 <img src="graph/transparent.png" alt="" usemap="#mapareaitems" />
                 <map id="mapareaitems" name="mapareaitems"></map>
             </div>
-<!--            <div id="mapdrag"></div>-->
+            <!--            <div id="mapMenuBall"></div>-->
+            <div id="mapdrag"></div>
         </div>
         <div id="provinceView">
-            <div>To jest widok prowincji i takie tam inne bajery</div>
-            <p>Kliknij
-                <a href="javascript:showBuilding();">tutaj</a>.
-            </p>
+            <div class="provinceDetail">
+                <div id="slot1" class="slot"></div>
+                <div id="slot2" class="slot"></div>
+                <div id="slot3" class="slot"></div>
+                <div id="slot4" class="slot"></div>
+                <div id="slot5" class="slot"></div>
+            </div>
         </div>
         <div id="buildingSelected">
             <p>Wybrano jakiś budynek</p>

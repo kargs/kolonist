@@ -11,30 +11,50 @@ var bufferTopSize = 445;
 var bufferBottomSize = 100;
 
 $(function() {
+
+    for(i=1; i<=5; i++) {
+        buildBallMenu($('#slot'+i), {
+            title: 'Slot #'+i,
+            css: 'test',
+            style: 'color:orange'
+        },
+        [
+        {
+            title: 'Pozycja #1'
+        },
+        {
+            title: 'Pozycja #2'
+        },
+        {
+            title: 'Pozycja #3'
+        }
+        ]);
+    }
+
     $('#top #menu a').button({
         height: 30
     });
     $('#provinceView').dialog({
-        autoOpen: false,
+        //        autoOpen: false,
         modal: true,
         resizable: false,
-        width: $(document).width()-200,
+        width: 760,
+        height: 550,
+        dragStop: function() {
+            alert($(this).parents('.ui-dialog').css('top'));
+        },
+        //        width: $(document).width()-200,
         //        position: [100, 50],
-        show: 'explode',
-        hide: 'explode'
+        show: 'clip',
+        hide: 'fold'
 
     });
     $('#buildingSelected').dialog({
         autoOpen: false,
         modal: true
     });
-//    $.getJSON('/provinces.json', {}, function(data, textStatus){  // dziala tylko w ff
-//        provinces = data;
-//        buildCache();
-//        initMap();
-//    });
     $.ajax({
-        url: '/provinces.txt',
+        url: 'provinces.txt',
         success: function(data) {
             var r = null;
             r = eval(data);
@@ -48,62 +68,35 @@ $(function() {
             initMap();
         }
     });
-    $('#btn').click(function(e){
-        positionX = $('#px').val();
-        positionY = $('#py').val();
-        initMap();
+
+    // uaktywnienie wartswy do przeciągania
+    $('.moveHandle').click(function(e){
+        $('#mapdrag').slideUp();
+        $('#mapdrag').css('display', 'block');
+        e.preventDefault();
     });
-    $('#left').click(function() {
-        positionX += Math.abs($('#inc').val());
-        positionX = Math.abs(positionX %mapWidth);
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#right').click(function() {
-        positionX -= Math.abs($('#inc').val());
-        if(positionX < 0) {
-            positionX = mapWidth + positionX;
-        }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#up').click(function() {
-        positionY += Math.abs($('#inc').val());
-        positionY = Math.abs(positionY % mapHeight);
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#down').click(function() {
-        positionY -= Math.abs($('#inc').val());
-        if(positionY < 0) {
-            positionY = mapHeight + positionY;
-        }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    var mouseX = 0;
-    var mouseY = 0;
-    var initEnable = true;
+    
+
+    // przesuwanie warstwy do przesuwania
+    var mouseXdelta = 0; // przyrosty wspolrzednych
+    var mouseYdelta = 0;
     $('div#mapdrag').draggable({
         refreshPositions: false,
-        grid: [5, 5],
         start: function(event, ui) {
-            mouseX = ui.offset.left;
-            mouseY = ui.offset.top;
+            mouseXdelta = ui.offset.left;
+            mouseYdelta = ui.offset.top;
         },
         stop: function(event, ui) {
             $('div#mapdrag').css('top', '0');
             $('div#mapdrag').css('left', '0');
+            $('div#map').css('left', 0).css('top', 0);
+            initMap();
         },
         drag: function(event, ui) {
-            var diffX = ui.offset.left - mouseX;
-            var diffY = ui.offset.top - mouseY;
-            mouseX = ui.offset.left;
-            mouseY = ui.offset.top;
+            var diffX = ui.offset.left - mouseXdelta;
+            var diffY = ui.offset.top - mouseYdelta;
+            mouseXdelta = ui.offset.left;
+            mouseYdelta = ui.offset.top;
 
             positionX -= diffX;
             if(positionX < 0) {
@@ -117,13 +110,9 @@ $(function() {
             } else {
                 positionY %= mapHeight;
             }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-            if(initEnable) {
-                initEnable = false;
-                initMap();
-                initEnable = true;
-            }
+            $('#px').val(positionX);
+            $('#py').val(positionY);
+            $('div#map').css('left',  ui.offset.left).css('top',  ui.offset.top);
         }
     });
 });
@@ -167,6 +156,7 @@ function initMap() {
     var sky = spy + sah;
     var map = '';
     var maparea = '';
+    //    var ballMenu = '';
     var i, ii, j, jj, ip=0, jp=0, ifst=false, jfst=false;
     for(i=spx; i <= skx; i++) {
         ii = i % smw;
@@ -194,11 +184,15 @@ function initMap() {
                     maparea += (point.x + x)+','+(point.y + y);
                 });
                 maparea += '" />';
+            //                ballMenu += '<div style="top:'+(y+10)+'px; left:'+(x+10)+'px;" class="ball_item"><div class="ball_content">KAM<br/>karo</div>';
+            //                ballMenu += '<div class="ball_menu_item"> <a href="#"><img src="" alt="Pozycja 1"/></a></div></div>';
             });
         }
     }
     $('#map').empty();
     $('#map').append(map);
+    //    $('#mapMenuBall').html(ballMenu);
+    //    initBallMenu();
     $('#mapareaitems').empty().append(maparea);
     $('#mapareaitems area').mouseover(function (e) {
         var id = $(this).attr('rel');
@@ -207,14 +201,27 @@ function initMap() {
         var id = $(this).attr('rel');
         $('#map .province-'+id).removeClass('province-hover');
     });
+
+    // włączenie widoku provincji
+    $('#mapareaitems area').dblclick(function(event) {
+        event.preventDefault();
+        showProvince($(this).attr('rel'));
+    });
+    
     var mouseX = 0;
     var mouseY = 0;
     $('#mapareaitems area').draggable({
-        refreshPositions: false,
-        grid: [5, 5],
+        //        refreshPositions: false,
+        //        grid: [5, 5],
         start: function(event, ui) {
             mouseX = ui.offset.left;
             mouseY = ui.offset.top;
+        },
+        stop: function(event, ui) {
+            $('div#mapdrag').css('top', '0');
+            $('div#mapdrag').css('left', '0');
+            $('div#map').css('left', 0).css('top', 0);
+            initMap();
         },
         drag: function(event, ui) {
             var diffX = ui.offset.left - mouseX;
@@ -234,57 +241,50 @@ function initMap() {
             } else {
                 positionY %= mapHeight;
             }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-            if(initEnable) {
-                initEnable = false;
-                initMap();
-                initEnable = true;
-            }
+            $('#px').val(positionX);
+            $('#py').val(positionY);
+            $('div#map').css('left',  ui.offset.left).css('top',  ui.offset.top);
         }
     });
 }
-var initEnable = true;
 
-function _initMap() {
-    $('#map').empty();
-    var mapViewX = 10;
-    var mapViewY = 10;
-    var startX = Math.floor(mapViewX/scale);
-    var startY = Math.floor(mapViewY/scale);
-    var Ws = Math.floor(mapWidth/scale);
-    var Hs = Math.floor(mapHeight/scale);
-    var bufferWidthS = Math.floor(($(document).width() + 20)/scale);
-    var bufferHeightS = Math.floor(($(document).height() + 20)/scale);
-    var i=startX;
-    var k=startY;
-    var dx = 0;
-    var dy = 0;
-    for(j=0; j<bufferWidthS; j++) {
-        dy = 0;
-        for(m=0; m<bufferHeightS; m++) {
-            $.each(cache[i][k], function(index, province){
-                var tmpX = province.start.x-mapViewX + (dx);
-                var tmpY = province.start.y-mapViewY + (dy);
-                $('#map').append('<img style="left: '+(tmpX)+'px; top: '+(tmpY)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-            });
-            k = (k+1) % Hs;
-            if(k ==0) {
-                dy = mapHeight;
-            }
+
+$(function() {
+    $('#btn').click(function(e){
+        positionX = $('#px').val();
+        positionY = $('#py').val();
+        initMap();
+    });
+    $('#left').click(function() {
+        positionX += Math.abs($('#inc').val());
+        positionX = Math.abs(positionX %mapWidth);
+        $('#px').val(positionX);
+        $('#py').val(positionY);
+        initMap();
+    });
+    $('#right').click(function() {
+        positionX -= Math.abs($('#inc').val());
+        if(positionX < 0) {
+            positionX = mapWidth + positionX;
         }
-        i = (i+1) % Ws;
-        if(i == 0) {
-            dx = mapWidth;
+        $('#px').val(positionX);
+        $('#py').val(positionY);
+        initMap();
+    });
+    $('#up').click(function() {
+        positionY += Math.abs($('#inc').val());
+        positionY = Math.abs(positionY % mapHeight);
+        $('#px').val(positionX);
+        $('#py').val(positionY);
+        initMap();
+    });
+    $('#down').click(function() {
+        positionY -= Math.abs($('#inc').val());
+        if(positionY < 0) {
+            positionY = mapHeight + positionY;
         }
-    }
-//    $.each(provinces, function(i, province){
-//        $('#map').append('<img style="left: '+province.start.x+'px; top: '+province.start.y+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x+mapWidth)+'px; top: '+(province.start.y)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x+mapWidth)+'px; top: '+(province.start.y+mapHeight)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x)+'px; top: '+(province.start.y+mapHeight)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x-mapWidth)+'px; top: '+(province.start.y)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x-mapWidth)+'px; top: '+(province.start.y-mapHeight)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//        $('#map').append('<img style="left: '+(province.start.x)+'px; top: '+(province.start.y-mapHeight)+'px;" src="maps/p'+province.id+'.png" alt="Provincja" class="province" />');
-//    });
-}
+        $('#px').val(positionX);
+        $('#py').val(positionY);
+        initMap();
+    });
+});
