@@ -91,12 +91,6 @@ Kohana::modules(array(
  * defaults for the URI.
  */
 
-Route::set('admin', 'admin(/<action>(/<param>(/<id>)))')
-	->defaults(array(
-		'controller' => 'admin',
-		'action'     => 'index',
-));
-
 Route::set('info', 'info(/<page>)')
 	->defaults(array(
 		'controller' => 'info',
