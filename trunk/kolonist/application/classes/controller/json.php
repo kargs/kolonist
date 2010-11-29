@@ -2,6 +2,10 @@
 
 class Controller_Json extends Controller_Default {
 
+	public $access = array(
+		':default' => self::ACCESS_LOGIN,
+	);
+
 	public $template = 'layout/json';
 
 	public function before() {
@@ -20,7 +24,49 @@ class Controller_Json extends Controller_Default {
 		parent::after();
 	}
 
-	public function action_province($id) {
+	public function action_startgame() {
+		$province = ORM::factory('province')->where('user_id', '=', 0)->orderby(DB::expr('RAND()'), NULL)->find();
+		$province->user_id = $this->user->id;
+		$province->save();
+
+		// TODO: return info
+	}
+
+	public function action_createbuilding($province_id, $slot_index, $building_type) {
+		// TODO: check requirements
+
+		$buildingstat = ORM::factory('buildingstat')->where('type', '=', $building_type)->where('level', '=', 1)->find();
+
+		// TODO: check if buildingstat exists
+
+		$building = ORM::factory('building');
+
+		$building->buildingstat_id = $buildingstat->id;
+
+		// unfinished!
+	}
+
+	public function action_upgradebuilding($province_id, $slot_index) {
+
+	}
+
+	public function action_attachworkers($province_id, $slot_index, $workers_count) {
+
+	}
+
+	public function action_conquerprovince($province_id) {
+
+	}
+
+	public function action_checkrequirementsforcreate($province_id) {
+
+	}
+
+	public function action_checkrequirementsforupgrade($province_id, $slot_index) {
+
+	}
+
+	public function action_getprovinceinfo($id) {
 
 		$province = ORM::factory('province', $id);
 
@@ -48,7 +94,7 @@ class Controller_Json extends Controller_Default {
 		$this->view['resources']['brick'] = $province->brick_count;
 	}
 
-	public function action_buildingstats() {
+	public function action_getbuildingstats() {
 		$buildingstats = ORM::factory('buildingstat')->find_all();
 
 		foreach ($buildingstats as $buildingstat) {

@@ -6,6 +6,7 @@ class Model_User extends Model_Auth_User {
 		'roles'       => array('model' => 'role', 'through' => 'roles_users'),
 
 		'provinces'   => array(),
+		'infos'       => array(),
 	);
 
 	public function validate_create(& $array) 
