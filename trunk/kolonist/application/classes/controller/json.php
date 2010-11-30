@@ -20,7 +20,7 @@ class Controller_Json extends Controller_Default {
 
 		$this->request->headers['Content-Type'] = 'text/plain';
 
-		$this->resourcesTemplateArray = Kohana::config('resources');
+		$this->resourcesTemplateArray = (array)Kohana::config('resources');
 		$this->resourcesNames = array_values($this->resourcesTemplateArray);
 	}
 	
@@ -60,12 +60,14 @@ class Controller_Json extends Controller_Default {
 			return FALSE;
 		}
 
-		// TODO: check requirements
-
 		$buildingstat = ORM::factory('buildingstat')->where('type', '=', $building_type)->where('level', '=', 1)->find();
 
 		if ($buildingstat->id === NULL) {
 			return $this->error('There is no building of type given.');
+		}
+
+		if (!$this->canCreateBuilding($province, $buildingstat)) {
+			return $this->error('Not enough resources to create the building.');
 		}
 
 		$building = ORM::factory('building');
@@ -110,6 +112,9 @@ class Controller_Json extends Controller_Default {
 		return $this->success('Building upgraded.');
 	}
 
+	/**
+	 *
+	 */
 	public function action_attachworkers($province_id, $slot_index, $workers_count) {
 		$province = ORM::factory('province', $province_id);
 
@@ -131,18 +136,30 @@ class Controller_Json extends Controller_Default {
 		// TODO: info
 	}
 
+	/**
+	 *
+	 */
 	public function action_conquerprovince($province_id) {
 		// TODO: later
 	}
 
+	/**
+	 *
+	 */
 	public function action_checkrequirementsforcreate($province_id) {
 
 	}
 
+	/**
+	 *
+	 */
 	public function action_checkrequirementsforupgrade($province_id, $slot_index) {
 
 	}
 
+	/**
+	 * Returns info about particular province.
+	 */
 	public function action_getprovinceinfo($id) {
 
 		$province = ORM::factory('province', $id);
@@ -171,6 +188,9 @@ class Controller_Json extends Controller_Default {
 		$this->view['resources']['brick'] = $province->brick_count;
 	}
 
+	/**
+	 * Returns info about all building types in the game.
+	 */
 	public function action_getbuildingstats() {
 		$buildingstats = ORM::factory('buildingstat')->find_all();
 
@@ -179,6 +199,9 @@ class Controller_Json extends Controller_Default {
 		}
 	}
 
+	/**
+	 * Returns info about the world. It has to be invoked regularly.
+	 */
 	public function action_cycle() {
 		$provinces = ORM::factory('province')->find_all();
 
@@ -198,8 +221,6 @@ class Controller_Json extends Controller_Default {
 		// TODO: info o zmianach
 	}
 
-
-
 	protected function isUserOwnerOfProvince($province) {
 		return $province->user->id === $this->user->id;
 	}
@@ -216,6 +237,16 @@ class Controller_Json extends Controller_Default {
 		return $province;
 	}
 
+	protected function canCreateBuilding($province, $buildingstat) {
+		foreach ($this->resourcesNames as $resource) {
+			if ($province->{$resource . '_count'} < $buildingstat->{$resource . '_requirement'}) {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
+
 	protected function canUpgradeBuilding($province, $building) {
 		$upgradedBuildingstat = ORM::factory('buildingstat')->where('type', '=', $building->buildingstat->type)->where('level', '=', $building->level + 1)->find();
 
@@ -223,13 +254,7 @@ class Controller_Json extends Controller_Default {
 			return FALSE;
 		}
 
-		foreach ($this->resourcesNames as $resource) {
-			if ($province->{$resource . '_count'} < $upgradedBuildingstat->{$resource . '_requirement'}) {
-				return FALSE;
-			}
-		}
-
-		return TRUE;
+		return $this->canCreateBuilding($province, $upgradedBuildingstat);
 	}
 
 	protected function success($message) {
