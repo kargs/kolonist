@@ -97,6 +97,12 @@ Route::set('info', 'info(/<page>)')
 		'action'     => 'index',
 ));
 
+Route::set('threeparams', '(<controller>(/<action>(/<param1>(/<param2>(/<param3>)))))')
+	->defaults(array(
+		'controller' => 'welcome',
+		'action'     => 'index',
+	));
+
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'welcome',

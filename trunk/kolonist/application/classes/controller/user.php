@@ -7,7 +7,6 @@ class Controller_User extends Controller_Default {
 		'index'    => Controller_Default::ACCESS_ANYONE,
 		'register' => Controller_Default::ACCESS_GUEST,
 		'login'    => Controller_Default::ACCESS_GUEST,
-		'logout'   => Controller_Default::ACCESS_ANYONE,
 	);
 
 	public function action_index() {
