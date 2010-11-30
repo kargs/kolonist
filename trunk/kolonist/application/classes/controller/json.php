@@ -21,7 +21,7 @@ class Controller_Json extends Controller_Default {
 		$this->request->headers['Content-Type'] = 'text/plain';
 
 		$this->resourcesTemplateArray = (array)Kohana::config('resources');
-		$this->resourcesNames = array_values($this->resourcesTemplateArray);
+		$this->resourcesNames = array_keys($this->resourcesTemplateArray);
 	}
 	
 	public function after() {
@@ -60,6 +60,12 @@ class Controller_Json extends Controller_Default {
 			return FALSE;
 		}
 
+		$existingBuilding = $province->buildings->where('slot_index', '=', $slot_index)->find();
+
+		if ($existingBuilding->id !== NULL) {
+			return $this->error('A building exists on given slot.');
+		}
+
 		$buildingstat = ORM::factory('buildingstat')->where('type', '=', $building_type)->where('level', '=', 1)->find();
 
 		if ($buildingstat->id === NULL) {
@@ -84,21 +90,21 @@ class Controller_Json extends Controller_Default {
 	}
 
 	/**
-	 * 
+	 * Upgrades the building assigned to the $slot_index in province $province_id.
 	 */
 	public function action_upgradebuilding($province_id, $slot_index) {
 		if (($province = $this->getAndCheckProvince($province_id)) === FALSE) {
 			return FALSE;
 		}
 
-		$building = ORM::factory('building')->where('province_id', $province_id)->where('slot_index', $slot_index)->find();
+		$building = $province->buildings->where('slot_index', '=', $slot_index)->find();
 
 		if ($building->id === NULL) {
 			return $this->error('Building not found.');
 		}
 
 		if (!$this->canUpgradeBuilding($province, $building)) {
-			return $this->error('Not enough resources to upgrade the building.');
+			return $this->error('Not enough resources to upgrade the building or building cannot be upgraded on higher level.');
 		}
 
 		foreach ($this->resourcesNames as $resource) {
@@ -115,36 +121,32 @@ class Controller_Json extends Controller_Default {
 	/**
 	 *
 	 */
-	public function action_attachworkers($province_id, $slot_index, $workers_count) {
-		$province = ORM::factory('province', $province_id);
-
-		// todo check if province exists
-
-		if ($province->user->id !== $this->user->id) {
-			echo 'bad user id';die;
+	public function action_attachworkers($province_id, $slot_index, $workers_assigned) {
+		if (($province = $this->getAndCheckProvince($province_id)) === FALSE) {
+			return FALSE;
 		}
 
 		$building = $province->buildings->where('slot_index', '=', $slot_index)->find();
 
-		if ($workers_count < 0 || $workers_count > $building->buildingstat->workers_max) {
-			echo 'bad workers count';die;
+		if ($workers_assigned < 0 || $workers_assigned > $building->buildingstat->workers_max) {
+			return $this->error('Tried to assign to much or to few workers.');
 		}
 
-		$building->workers_assigned = $workers_count;
+		$building->workers_assigned = $workers_assigned;
 		$building->save();
 
-		// TODO: info
+		return $this->success('Workers assigned.');
 	}
 
 	/**
-	 *
+	 * Does the "battle" between two provinces. To be done later.
 	 */
 	public function action_conquerprovince($province_id) {
 		// TODO: later
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public function action_checkrequirementsforcreate($province_id) {
 

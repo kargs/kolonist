@@ -9,7 +9,7 @@ class Controller_Cron extends Controller_Default {
 		parent::before();
 
 		$this->resourcesTemplateArray = Kohana::config('resources');
-		$this->resourcesNames = array_values($this->resourcesTemplateArray);
+		$this->resourcesNames = array_keys($this->resourcesTemplateArray);
 	}
 
 	public function action_cycle() {
