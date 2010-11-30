@@ -205,7 +205,7 @@ class Controller_Json extends Controller_Default {
 	 * Returns info about the world. It has to be invoked regularly.
 	 */
 	public function action_cycle() {
-		$provinces = ORM::factory('province')->find_all();
+		$provinces = ORM::factory('province')->with('user')->find_all();
 
 		foreach ($provinces as $province) {
 			$jsonProvince['id'] = $province->id;
