@@ -3,6 +3,6 @@ class Model_Building extends ORM {
 
 	protected $_belongs_to = array(
 		'buildingstat' => array(),
-		'slot' => array()
+		'province' => array()
 	);
 }

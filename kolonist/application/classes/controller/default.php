@@ -39,7 +39,7 @@ abstract class Controller_Default extends Controller_Template {
 		if ($access === self::ACCESS_GUEST && Auth::instance()->logged_in()) {
 			// User is logged in, but the access is for logged out only
 			Request::instance()->redirect('failure/guestonly');
-		} else if ($access > self::ACCESS_GUEST && !Auth::instance()->logged_in($access)) {
+		} else if ($access > self::ACCESS_GUEST && !(Auth::instance()->logged_in() && $this->user->has('roles', ORM::factory('role', $access)))) {
 			// User has no sufficient privileges
 			Request::instance()->redirect('failure/noaccess');
 		}
