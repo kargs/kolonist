@@ -101,6 +101,22 @@ class Controller_Json extends Controller_Default {
 		return $this->success('Building created.');
 	}
 
+	public function action_destroybuilding($province_id, $slot_index) {
+		if (($province = $this->getAndCheckProvince($province_id)) === FALSE) {
+			return FALSE;
+		}
+
+		$existingBuilding = $province->buildings->where('slot_index', '=', $slot_index)->find();
+
+		if ($existingBuilding->id === NULL) {
+			return $this->error('A building does not exist on given slot.');
+		}
+
+		$existingBuilding->delete();
+
+		return $this->success('Building removed.');
+	}
+
 	/**
 	 * Upgrades the building assigned to the $slot_index in province $province_id.
 	 */
