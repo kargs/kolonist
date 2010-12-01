@@ -115,16 +115,16 @@ class Controller_Json extends Controller_Default {
 			return $this->error('Building not found.');
 		}
 
-		if (!$this->canUpgradeBuilding($province, $building)) {
-			return $this->error('Not enough resources to upgrade the building or building cannot be upgraded on higher level.');
-		}
-
 		$upgradedBuildingstat = ORM::factory('buildingstat')->where('type', '=', $building->buildingstat->type)->where('level', '=', $building->level + 1)->find();
 
 		if ($upgradedBuildingstat->id === NULL) {
 			return FALSE;
 		}
 
+		if (!$this->canCreateBuilding($province, $upgradedBuildingstat)) {
+			return $this->error('Not enough resources to upgrade the building or building cannot be upgraded on higher level.');
+		}
+		
 		$this->removeResourcesForNewBuilding($province, $upgradedBuildingstat);
 		$province->save();
 
