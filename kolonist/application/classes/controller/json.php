@@ -6,12 +6,15 @@ class Controller_Json extends Controller_Default {
 	protected $resourcesNames;
 
 	public $access = array(
-		':default' => Controller_Default::ACCESS_LOGIN,
+		':default' => Controller_Default::ACCESS_ANYONE,
 	);
 
 	public $template = 'layout/json';
+        private $_timeStart;
+
 
 	public function before() {
+                $this->_timeStart = time();
 		parent::before();
 
 		$this->view = array();
@@ -26,11 +29,17 @@ class Controller_Json extends Controller_Default {
 	
 	public function after() {
 		$this->template->content = json_encode($this->view);
+                $this->template->status_time = time() - $this->_timeStart;
 
 		parent::after();
 	}
 
-	/**
+        public function action_currentuser() {
+            $this->view['id'] = $this->user->id;
+            $this->view['username'] = $this->user->username;
+        }
+
+        /**
 	 * Starts game - player gets the random unassigned province. This action
 	 * can be invoked only once for particular player.
 	 */
@@ -75,8 +84,6 @@ class Controller_Json extends Controller_Default {
 		if (!$this->canCreateBuilding($province, $buildingstat)) {
 			return $this->error('Not enough resources to create the building.');
 		}
-
-		$this->removeResourcesForNewBuilding($province, $buildingstat);
 
 		$building = ORM::factory('building');
 		$building->buildingstat = $buildingstat;
@@ -174,6 +181,7 @@ class Controller_Json extends Controller_Default {
 
 		foreach($province->buildings->find_all() as $building) {
 			if ($building) {
+				$jsonSlot['building']['slot_index'] = $building->slot_index;
 				$jsonSlot['building']['type'] = $building->buildingstat->type;
 				$jsonSlot['building']['level'] = $building->level;
 				$jsonSlot['building']['workers'] = $building->workers_assigned;
@@ -211,12 +219,13 @@ class Controller_Json extends Controller_Default {
 
 		foreach ($provinces as $province) {
 			$jsonProvince['id'] = $province->id;
+			$jsonProvince['name'] = $province->name;
 
 			if (!$province->user) {
 				$jsonProvince['owner'] = null;
 			} else {
 				$jsonProvince['owner']['id'] = $province->user->id;
-				$jsonProvince['owner']['nickname'] = $province->user->nickname;
+				$jsonProvince['owner']['nickname'] = $province->user->username;
 			}
 
 			$this->view['provinces'][] = $jsonProvince;
@@ -259,12 +268,6 @@ class Controller_Json extends Controller_Default {
 		}
 
 		return $this->canCreateBuilding($province, $upgradedBuildingstat);
-	}
-
-	protected function removeResourcesForNewBuilding($province, $buildingstat) {
-		foreach ($this->resourcesNames as $resource) {
-			$province->{$resource . '_count'} -= $buildingstat->{$resource . '_requirement'};
-		}
 	}
 
 	protected function success($message) {
