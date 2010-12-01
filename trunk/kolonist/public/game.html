@@ -6,49 +6,58 @@
         <title>Kolonist | The best game ty ever widział</title>
         <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
         <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
 
         <link type="text/css" href="css/ball_menu.css" rel="stylesheet" />
         <script type="text/javascript" src="js/ball_menu.js"></script>
 
         <link href="css/map.css" type="text/css" rel="stylesheet"/>
-        <script type="text/javascript" src="js/game.js"></script>
+        <script type="text/javascript" src="js/game/general.js"></script>
+        <script type="text/javascript" src="js/game/user-interface.js"></script>
+        <script type="text/javascript" src="js/game/map.js"></script>
+        <script type="text/javascript" src="js/game/building.js"></script>
+        <script type="text/javascript" src="js/game/province.js"></script>
+        <script type="text/javascript" src="js/game/cycle.js"></script>
     </head>
     <body>
         <div id="wrapper">
             <div id="top">
-                <div id="menu">
-                    <ul>
-                        <li><a href="#">Świat</a></li>
-                        <li><a href="#">Provincja</a></li>
-                    </ul>
+                <div class="logo">
+                    <div class="full">
+                        <img src="graphics/kolonist.png" alt="Kolonist"/>
+                    </div>
                 </div>
-                <div id="infobar">
-                    <div class="material">
-                        Kasza manna
+                <div class="top_content">
+                    <div id="menu">
                     </div>
-                    <div class="separator"></div>
-                    <div class="material">
-                        Osadnicy
+                    <div id="infobar">
+                        <input type="button" class="myProvincesButton" value="My provinces"/>
+                        <div class="material">
+                            Kasza manna
+                        </div>
+                        <div class="separator"></div>
+                        <div class="material">
+                            Osadnicy
+                        </div>
+                        <div class="separator"></div>
+                        <div class="material">
+                            Cegły
+                        </div>
+                        <div class="separator"></div>
+                        <div class="material">
+                            Drągi
+                        </div>
+                        <a class="moveHandle" href="#">Przeciągnij</a>
+                        <a href="javascript:showProvince(2);">Pokaż prowincję</a>
+                        <input type="text" id="px" size="3" />
+                        <input type="text" id="py" size="3" />
+                        <input type="button" id="btn" value="Go" />
+                        <input type="text" id="inc" size="3" value="10" />
+                        <input type="button" id="left" value="left" />
+                        <input type="button" id="right" value="right" />
+                        <input type="button" id="up" value="up" />
+                        <input type="button" id="down" value="down" />
                     </div>
-                    <div class="separator"></div>
-                    <div class="material">
-                        Cegły
-                    </div>
-                    <div class="separator"></div>
-                    <div class="material">
-                        Drągi
-                    </div>
-                    <a class="moveHandle" href="#">Przeciągnij</a>
-                    <a href="javascript:showProvince(2);">Pokaż prowincję</a>
-                    <input type="text" id="px" size="3" />
-                    <input type="text" id="py" size="3" />
-                    <input type="button" id="btn" value="Go" />
-                    <input type="text" id="inc" size="3" value="10" />
-                    <input type="button" id="left" value="left" />
-                    <input type="button" id="right" value="right" />
-                    <input type="button" id="up" value="up" />
-                    <input type="button" id="down" value="down" />
                 </div>
             </div>
             <div id="map">&nbsp;</div>
@@ -60,16 +69,47 @@
             <div id="mapdrag"></div>
         </div>
         <div id="provinceView">
-            <div class="provinceDetail">
-                <div id="slot1" class="slot"></div>
-                <div id="slot2" class="slot"></div>
-                <div id="slot3" class="slot"></div>
-                <div id="slot4" class="slot"></div>
-                <div id="slot5" class="slot"></div>
+            <div class="loading">
+                <img src="graph/loading.gif" alt="Loading..."/>
+            </div>
+            <div class="loaded">
+                <div class="resourcesbar">
+                    <div class="name">settlers</div>
+                    <div class="value settlers"></div>
+                    <div class="name">soldiers</div>
+                    <div class="value soldiers"></div>
+                    <div class="name">armament</div>
+                    <div class="value armament"></div>
+                    <div class="name">food</div>
+                    <div class="value food"></div>
+                    <div class="name">wood</div>
+                    <div class="value wood"></div>
+                    <div class="name">iron</div>
+                    <div class="value iron"></div>
+                    <div class="name">brick</div>
+                    <div class="value brick"></div>
+                    <br class="clear"/>
+                </div>
+                <div class="provinceDetail">
+                    <div id="slot0" class="slot"></div>
+                    <div id="slot1" class="slot"></div>
+                    <div id="slot2" class="slot"></div>
+                    <div id="slot3" class="slot"></div>
+                    <div id="slot4" class="slot"></div>
+                </div>
             </div>
         </div>
-        <div id="buildingSelected">
-            <p>Wybrano jakiś budynek</p>
+        <div id="errorDialog"></div>
+        <div id="buildingView">
+            <div class="buildingDetail">
+                Workers: <span class="workers"></span>
+                <a class="increaseWorkers" href="#">Increase workers</a>
+                <a class="decreaseWorkers" href="#">Decrease workers</a>
+            </div>
+        </div>
+        <div id="myProvincesDialog">
+            <div>List of my provinces:</div>
+            <div class="myProvincesList"></div>
         </div>
     </body>
 </html>
