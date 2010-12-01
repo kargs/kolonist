@@ -86,6 +86,7 @@ class Controller_Json extends Controller_Default {
 		}
 
 		$this->removeResourcesForNewBuilding($province, $buildingstat);
+		$province->save();
 
 		$building = ORM::factory('building');
 		$building->buildingstat = $buildingstat;
@@ -118,10 +119,13 @@ class Controller_Json extends Controller_Default {
 			return $this->error('Not enough resources to upgrade the building or building cannot be upgraded on higher level.');
 		}
 
-		foreach ($this->resourcesNames as $resource) {
-			$province->{$resource . '_count'} -= $upgradedBuildingstat->{$resource . '_requirement'};
+		$upgradedBuildingstat = ORM::factory('buildingstat')->where('type', '=', $building->buildingstat->type)->where('level', '=', $building->level + 1)->find();
+
+		if ($upgradedBuildingstat->id === NULL) {
+			return FALSE;
 		}
 
+		$this->removeResourcesForNewBuilding($province, $upgradedBuildingstat);
 		$province->save();
 
 		$building->level += 1;
@@ -260,16 +264,6 @@ class Controller_Json extends Controller_Default {
 		}
 
 		return TRUE;
-	}
-
-	protected function canUpgradeBuilding($province, $building) {
-		$upgradedBuildingstat = ORM::factory('buildingstat')->where('type', '=', $building->buildingstat->type)->where('level', '=', $building->level + 1)->find();
-
-		if ($upgradedBuildingstat->id === NULL) {
-			return FALSE;
-		}
-
-		return $this->canCreateBuilding($province, $upgradedBuildingstat);
 	}
 
 	protected function removeResourcesForNewBuilding($province, $buildingstat) {
