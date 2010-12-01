@@ -76,6 +76,8 @@ class Controller_Json extends Controller_Default {
 			return $this->error('Not enough resources to create the building.');
 		}
 
+		$this->removeResourcesForNewBuilding($province, $buildingstat);
+
 		$building = ORM::factory('building');
 		$building->buildingstat = $buildingstat;
 		$building->province = $province;
@@ -257,6 +259,12 @@ class Controller_Json extends Controller_Default {
 		}
 
 		return $this->canCreateBuilding($province, $upgradedBuildingstat);
+	}
+
+	protected function removeResourcesForNewBuilding($province, $buildingstat) {
+		foreach ($this->resourcesNames as $resource) {
+			$province->{$resource . '_count'} -= $buildingstat->{$resource . '_requirement'};
+		}
 	}
 
 	protected function success($message) {
