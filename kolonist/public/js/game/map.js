@@ -1,67 +1,60 @@
 var provinces;
-var mapWidth = 800;
-var mapHeight = 500;
+var provincesAsoc;
+var mapWidth = 3000;
+var mapHeight = 3000;
 var scale = 100;
 var cache;
-var positionX = 10;
-var positionY = 10;
-var bufferLeftSize = 715;
-var bufferRightSize = 100;
-var bufferTopSize = 445;
-var bufferBottomSize = 100;
+var bufferLeftSize = 1215;
+var bufferRightSize = 800;
+var bufferTopSize = 645;
+var bufferBottomSize = 400;
+var positionX = mapWidth - bufferLeftSize;
+var positionY = mapHeight - bufferTopSize;
 
-$(function() {
 
-    for(i=1; i<=5; i++) {
-        buildBallMenu($('#slot'+i), {
-            title: 'Slot #'+i,
-            css: 'test',
-            style: 'color:orange'
-        },
-        [
-        {
-            title: 'Pozycja #1'
-        },
-        {
-            title: 'Pozycja #2'
-        },
-        {
-            title: 'Pozycja #3'
-        }
-        ]);
-    }
+/**
+ * przechodzi do pozycji gdzie punkt na mapie (x,y) jest na środku ekranu
+ */
+function moveTo(x, y) {
+    x = parseInt(x);
+    y = parseInt(y);
+    var wndW = $(document).width()/2;
+    var wndH = $(document).height()/2;
+    var nx = (mapWidth - bufferLeftSize + x)%mapWidth - wndW;
+    var ny = (mapHeight - bufferTopSize + y)%mapWidth - wndH;
+    //@todo animacja
+    positionX = nx;
+    positionY = ny;
+    initMap();
+}
 
-    $('#top #menu a').button({
-        height: 30
-    });
-    $('#provinceView').dialog({
-        //        autoOpen: false,
-        modal: true,
-        resizable: false,
-        width: 760,
-        height: 550,
-        dragStop: function() {
-            alert($(this).parents('.ui-dialog').css('top'));
-        },
-        //        width: $(document).width()-200,
-        //        position: [100, 50],
-        show: 'clip',
-        hide: 'fold'
+/**
+ * centruje procvincje
+ * @param id id prowincji
+ */
+function centerProvince(id) {
+    var p = provincesAsoc[id];
+    var cx = Math.round((p.start.x + p.end.x ) / 2);
+    var cy = Math.round((p.start.y + p.end.y ) / 2);
+    moveTo(cx, cy);
+}
 
-    });
-    $('#buildingSelected').dialog({
-        autoOpen: false,
-        modal: true
-    });
+$(function(){
     $.ajax({
         url: 'provinces.txt',
         success: function(data) {
             var r = null;
             r = eval(data);
             provinces = new Array();
+            provincesAsoc = new Array();
             $.each(r, function(i, p) {
                 if(!(p === undefined)) {    // hack for ie
+                    p.owner = new Object();
+                    p.owner.id = null;
+                    p.owner.nickname = null;
+                    p.name = '';
                     provinces[i] = p;
+                    provincesAsoc[p.id] = p;
                 }
             });
             buildCache();
@@ -75,7 +68,7 @@ $(function() {
         $('#mapdrag').css('display', 'block');
         e.preventDefault();
     });
-    
+
 
     // przesuwanie warstwy do przesuwania
     var mouseXdelta = 0; // przyrosty wspolrzednych
@@ -116,14 +109,6 @@ $(function() {
         }
     });
 });
-function showProvince(id) {
-    $('#provinceView').dialog('option', 'title', 'Provincja '+id);
-    //    $('#provinceView').dialog('option', 'hide', {effect: 'drop', direction: 'right'});
-    $('#provinceView').dialog('open');
-}
-function showBuilding() {
-    $('#buildingSelected').dialog('open');
-}
 function buildCache() {
     var dimenstion2 = Math.floor(mapHeight/scale);
     cache = new Array(Math.floor(mapWidth/scale));
@@ -172,7 +157,15 @@ function initMap() {
                 var x = p.start.x - px + ip*mapWidth - bufferLeftSize;
                 var y = p.start.y - py + jp*mapHeight - bufferTopSize;
                 //                $('#map').append('<img style="left: '+(x)+'px; top: '+(y)+'px;" src="maps/p'+p.id+'.png" alt="Provincja" class="province" />');   // faster
-                map += '<img style="left: '+(x)+'px; top: '+(y)+'px;" src="maps/p'+p.id+'.png" alt="Provincja" class="province province-'+p.id+'" />';
+                var color = 'normal';
+                if(!(p.owner === undefined)) {
+                    if(p.owner.id == userId) {
+                        color = 'owner';
+                    } else if(p.owner.id != null) {
+                        color = 'enemy';
+                    }
+                }
+                map += '<img style="left: '+(x)+'px; top: '+(y)+'px;" src="maps/'+color+'/p'+p.id+'.png" alt="" class="province province-'+p.id+'" />';
                 maparea += '<area shape="poly" rel="'+p.id+'" href="#'+p.id+'" coords="';
                 $.each(p.points, function(i, point){
                     if(point === undefined) {
@@ -207,7 +200,7 @@ function initMap() {
         event.preventDefault();
         showProvince($(this).attr('rel'));
     });
-    
+
     var mouseX = 0;
     var mouseY = 0;
     $('#mapareaitems area').draggable({
@@ -248,43 +241,3 @@ function initMap() {
     });
 }
 
-
-$(function() {
-    $('#btn').click(function(e){
-        positionX = $('#px').val();
-        positionY = $('#py').val();
-        initMap();
-    });
-    $('#left').click(function() {
-        positionX += Math.abs($('#inc').val());
-        positionX = Math.abs(positionX %mapWidth);
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#right').click(function() {
-        positionX -= Math.abs($('#inc').val());
-        if(positionX < 0) {
-            positionX = mapWidth + positionX;
-        }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#up').click(function() {
-        positionY += Math.abs($('#inc').val());
-        positionY = Math.abs(positionY % mapHeight);
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-    $('#down').click(function() {
-        positionY -= Math.abs($('#inc').val());
-        if(positionY < 0) {
-            positionY = mapHeight + positionY;
-        }
-        $('#px').val(positionX);
-        $('#py').val(positionY);
-        initMap();
-    });
-});
