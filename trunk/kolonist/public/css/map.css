@@ -8,12 +8,35 @@ div#wrapper {
     width: 100%;
     height: 100%;
 }
+
+/*-- TOP --*/
 #top {
     position: absolute;
-    border: red 1px solid;
     width: 100%;
     z-index: 9999;
-    background: red;
+/*    overflow: hidden;*/
+}
+#top .top_content {
+    height: 100%;
+    background-image: url(../graph/topbg.png);
+    background-repeat: repeat-x;
+    background-position: bottom;
+    height: 40px;
+}
+#top .logo {
+/*    position: absolute;*/
+    position: relative;
+    float: left;
+    background-image: url(../graph/topbg2.png);
+    background-repeat: no-repeat;
+    background-position: -681px bottom;
+    height: 70px;
+}
+#top .logo .full {
+    margin-top: 25px;
+}
+#top .logo .full img {
+    max-height: 30px;
 }
 #top #menu ul, #top #menu ul li {
     margin: 0px;
@@ -34,7 +57,7 @@ div#wrapper {
     height: 20px;
 }
 
-
+/*-- /koniec TOP --*/
 
 /*-- Mapa --*/
 div#map {
@@ -84,8 +107,39 @@ div#mapdrag {
 /*-- Widok prowincji --*/
 div#provinceView {
 }
+div#provinceView .loading {
+    display: block;
+}
+div#provinceView .loaded {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+div#provinceView div.provinceDetail {
+    background: url(../graph/province_bg.png) no-repeat;
+    width: 100%;
+    height: 100%;
+}
+div#provinceView .resourcesbar > div {
+    float: left;
+    margin-right: 5px;
+}
 
 /*-- koniec Widok prowincji --*/
+
+/*-- Widok budynku --*/
+div#buildingView {
+
+}
+div#buildingView div.buildingDetail {
+    background: url(../graph/buildings/inside.png) no-repeat;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    padding-left: 50px;
+}
+
+/*-- koniec Widok budynku --*/
 
 /*-- Ball Menu --*/
 div#mapMenuBall {
@@ -96,40 +150,38 @@ div#mapMenuBall {
 }
 /*-- koniec Ball Menu --*/
 
-div.provinceDetail {
-    background: url(../graph/province_bg.png);
-    width: 100%;
-    height: 100%;
-}
 
 
 /*-- ball menu przy widoku prowincji --*/
 div.slot {
     position: absolute;
+/*    background: url(../graphics/slot.png);*/
 }
-div#slot1 {
+div#slot0 {
     left: 300px;
     top: 20px;
 }
-div#slot2 {
-    left: 610px;
+div#slot1 {
+    left: 590px;
     top: 150px;
 }
-div#slot3 {
+div#slot2 {
     left: 460px;
     top: 300px;
 }
-div#slot4 {
+div#slot3 {
     left: 150px;
     top: 300px;
 }
-div#slot5 {
+div#slot4 {
     left: 10px;
     top: 150px;
 }
 /*-- /koniec ball menu przy widoku prowincji --*/
 
-
+div#myProvincesDialog div.myProvincesList li {
+    cursor: pointer;
+}
 
 /*Nadpisanie JQuery UI*/
 body div.ui-widget-overlay {

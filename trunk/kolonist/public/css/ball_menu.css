@@ -14,6 +14,10 @@ div.ball_content {
     position: absolute;
     z-index: 99;
 }
+div.ball_content img {
+    max-width: 50px;
+    max-height: 50px;
+}
 div.ball_menu_item {
     width: 50px;
     height: 50px;
@@ -21,4 +25,31 @@ div.ball_menu_item {
     z-index: 88;
 /*    top: 100px;*/
 /*    display: block;*/
+}
+
+div.ball_menu_item img {
+    max-width: 50px;
+    max-height: 50px;
+    border: none;
+}
+
+div.ball_item div.bgtoggle a {
+    background-position: bottom;
+    background-repeat: no-repeat;
+    display: block;
+    width: 50px;
+    height: 50px;
+    text-decoration: none;
+}
+div.ball_item div.bgtoggle a span {
+    display: block;
+    padding-top: 40px;
+    color: white;
+    font-weight: bold;
+}
+div.ball_item div.bgtoggle:hover a {
+    background-position: top;
+}
+div.ball_item div.develop a {
+    background-image: url(../graph/hammer.png);
 }
