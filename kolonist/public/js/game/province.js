@@ -68,6 +68,14 @@ function updateProvince(id) {
                             showBuilding(params[0], params[1]);
                         }
                     }
+                    balls[balls.length] = {
+                        css: 'bgtoggle develop',
+                        title: 'Destroy',
+                        params: [p.id, b.slot_index],
+                        click: function (e, params) {
+                            destroyBuilding(params[0], params[1]);
+                        }
+                    }
 
                     slots[b.slot_index].balls = balls;
                     slots[b.slot_index].img = 'graph/buildings/'+b.type+'.png';
@@ -118,6 +126,15 @@ function createBuilding(province_id, slot_index, building_type) {
 }
 function upgradeBuilding(province_id, slot_index) {
     $.get('json/upgradebuilding/'+province_id+'/'+slot_index, function(data) {
+        var r = null;
+        if((r = parseJSON(data)) === undefined) {
+            return;
+        }
+        updateProvince(province_id);
+    });
+}
+function destroyBuilding(province_id, slot_index) {
+    $.get('json/destroybuilding/'+province_id+'/'+slot_index, function(data) {
         var r = null;
         if((r = parseJSON(data)) === undefined) {
             return;
