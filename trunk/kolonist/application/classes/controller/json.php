@@ -39,27 +39,6 @@ class Controller_Json extends Controller_Default {
             $this->view['username'] = $this->user->username;
         }
 
-        /**
-	 * Starts game - player gets the random unassigned province. This action
-	 * can be invoked only once for particular player.
-	 */
-	public function action_startgame() {
-		if (count($this->user->provinces->find_all()) > 0) {
-			return $this->error('Cannot start the game if the user already has provinces.');
-		}
-
-		$province = ORM::factory('province')->where('user_id', '=', 0)->order_by(DB::expr('RAND()'), NULL)->find();
-
-		if ($province->id === NULL) {
-			return $this->error('No more free provinces available.');
-		}
-
-		$province->user = $this->user;
-		$province->save();
-
-		return $this->success('A province was assigned to the player.');
-	}
-
 	/**
 	 * Creates new building of type $building_type, and assignes it to the slot
 	 * $slot_index of province $province_id.
@@ -169,11 +148,63 @@ class Controller_Json extends Controller_Default {
 		return $this->success('Workers assigned.');
 	}
 
+	public function action_getarmyinfo() {
+		$provinces = ORM::factory('province')->find_all();
+
+		$armyinfo = array();
+		foreach ($provinces as $province) {
+			$armyinfo[] = array(
+				'provinceId' => $province->id,
+				'maxArmy' => $province->soldiers_count
+			);
+		}
+
+		$this->view = $armyinfo;
+	}
+
 	/**
-	 * Does the "battle" between two provinces. To be done later.
+	 * Does the "battle" between provinces.
 	 */
-	public function action_conquerprovince($province_id) {
-		// TODO: later
+	public function action_fight($provinceToAttackId) {
+		$provinceToAttack = ORM::factory('province', $provinceToAttackId);
+
+		if ($provinceToAttack->id === NULL) {
+			return $this->error('No province with given ID exists.');
+		} else if ($this->isUserOwnerOfProvince($provinceToAttack)) {
+			return $this->error('User is already an owner of given province.');
+		}
+
+
+		// pobieranie prowincji i wojsk z nich wysylanych
+		// $armyinfo to arrayka z parami provincjaid => ilosc wyslanych wojsk
+
+		// tu nalezy sprawdzic czy wszystkie prowincje naleza do usera
+
+		// compute the attack
+		$attack = 0;
+		foreach ($armyinfo as $squadron) {
+			$province = ORM::factory('province', $squadron['provinceId']);
+			$attack += $squadron['army'] * $province->armament_count;
+		}
+
+		// compute the defense
+		$defense = $provinceToAttack->soldiers_count * $provinceToAttack->armament_count;
+
+		if ($attack >= $defense) {
+			// Attacker won
+			$result['winnerId'] = $this->user->id;
+		} else {
+			$result['winnerId'] = $provinceToAttack->user->id;
+			$losts = array();
+			$lostDecimal = ($defense - $attack) / count($armyinfo);
+			foreach ($armyinfo as $squadron) {
+				$losts[] = array (
+					'provinceId' => $squadron['provinceId'],
+					//'armylost' => UNFINISHED
+				)
+			}
+		}
+
 	}
 
 	/**

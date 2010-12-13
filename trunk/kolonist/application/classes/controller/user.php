@@ -27,6 +27,18 @@ class Controller_User extends Controller_Default {
 				$user->add('roles', $login_role);
 
 				Auth::instance()->login($_POST['username'], $_POST['password']);
+				$this->user = Auth::instance()->get_user();
+
+				// Attach user to one province
+				$province = ORM::factory('province')->where('user_id', '=', 0)->order_by(DB::expr('RAND()'), NULL)->find();
+
+				if ($province->id === NULL) {
+					// TODO: handle this error properly
+					throw new Exception('No more free provinces available.');
+				}
+
+				$province->user = $this->user;
+				$province->save();
 
 				Request::instance()->redirect('welcome');
 			} else {
