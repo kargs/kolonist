@@ -149,7 +149,7 @@ class Controller_Json extends Controller_Default {
 	}
 
 	public function action_getarmyinfo() {
-		$provinces = ORM::factory('province')->find_all();
+		$provinces = ORM::factory('province')->where('user_id', '=', $this->user->id)->find_all();
 
 		$armyinfo = array();
 		foreach ($provinces as $province) {
@@ -174,17 +174,32 @@ class Controller_Json extends Controller_Default {
 			return $this->error('User is already an owner of given province.');
 		}
 
+		if (!isset($_POST['data'])) {
+			return $this->error('Bad request.');
+		}
 
-		// pobieranie prowincji i wojsk z nich wysylanych
-		// $armyinfo to arrayka z parami provincjaid => ilosc wyslanych wojsk
+		$provincesInfo = array();
+		foreach ($_POST['data'] as $squadron) {
+			$provinceInfo = array(
+				'province' => ORM::factory('province', $squadron['provinceId']),
+				'army' => $squadron['army'],
+			);
 
-		// tu nalezy sprawdzic czy wszystkie prowincje naleza do usera
+			if ($provinceInfo['province']->user->id !== $this->user->id) {
+				return $this->error('One or more of selected provinces are not belong to us.');
+			}
+
+			if ($provinceInfo['army'] > $provinceInfo['province']->soldiers_count) {
+				return $this->error('Not enought soldiers in province.');
+			}
+
+			$provincesInfo[] = $provinceInfo;
+		}
 
 		// compute the attack
 		$attack = 0;
-		foreach ($armyinfo as $squadron) {
-			$province = ORM::factory('province', $squadron['provinceId']);
-			$attack += $squadron['army'] * $province->armament_count;
+		foreach ($provincesInfo as $provinceInfo) {
+			$attack += $provinceInfo['army'] * $provinceInfo['province']->armament_count;
 		}
 
 		// compute the defense
@@ -192,19 +207,28 @@ class Controller_Json extends Controller_Default {
 
 		if ($attack >= $defense) {
 			// Attacker won
-			$result['winnerId'] = $this->user->id;
+			$result['won'] = true;
 		} else {
-			$result['winnerId'] = $provinceToAttack->user->id;
+			$result['won'] = false;
 			$losts = array();
-			$lostDecimal = ($defense - $attack) / count($armyinfo);
-			foreach ($armyinfo as $squadron) {
-				$losts[] = array (
-					'provinceId' => $squadron['provinceId'],
-					//'armylost' => UNFINISHED
-				)
+			$lostDecimal = ($defense - $attack) / ($defense + $attack);
+			foreach ($provincesInfo as $provinceInfo) {
+				$lost = array (
+					'provinceId' => $provinceInfo['province']->id,
+					'armylost' => (int)($lostDecimal * $provinceInfo['army']),
+				);
+
+				// Update the armies
+				$provinceInfo['province']->soldiers_count -= $lost['armylost'];
+				$provinceInfo['province']->save();
+
+				$losts[] = $lost;
 			}
+
+			$result['losts'] = $losts;
 		}
 
+		$this->view = $result;
 	}
 
 	/**
