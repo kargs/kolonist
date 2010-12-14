@@ -24,6 +24,9 @@ $(function(){
         height: 30
     });
 
+
+
+
     //------------------------------------------
     // My provinces
     //------------------------------------------
@@ -46,6 +49,24 @@ $(function(){
     });
 
 
+    //------------------------------------------
+    // Fieldset Toggle
+    //------------------------------------------
+    $('fieldset.fieldsetToogle legend span.ui-icon').live('click', function(event) {
+        var $icon = $(this);
+        var $parent = $(this).parents('fieldset.fieldsetToogle');
+        if($parent.is('.visible')) {
+            $icon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-n');
+            $('div.content', $parent).slideUp(function(){
+                $parent.removeClass('visible').addClass('hidden');
+            });
+        } else {
+            $icon.removeClass('ui-icon-triangle-1-n').addClass('ui-icon-triangle-1-s');
+            $('div.content', $parent).slideDown(function(){
+                $parent.removeClass('hidden').addClass('visible');
+            });
+        }
+    })
 
     //------------------------------------------
     
@@ -53,7 +74,7 @@ $(function(){
         var x = $('#px').val();
         var y = $('#py').val();
         moveTo(x, y);
-//        initMap();
+    //        initMap();
     });
     $('#left').click(function() {
         positionX += Math.abs($('#inc').val());
