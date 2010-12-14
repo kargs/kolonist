@@ -2,8 +2,42 @@ var ajaxProxy = 'proxy.php?url=';
 var slotMax = 5;
 var userId = 4;
 var userName = '';
+var maxProgress = 4;
+var currentProgress = 0;
+var progressFinisfed = new Array();
+
+function setCurrentProgress(name) {
+    progressFinisfed[name] = true;
+    if(currentProgress == maxProgress) {
+        return;
+    }
+    currentProgress++;
+    $('#loadingDialog .progresDetails tr.'+name+' img').attr('src', 'graph/tick.png');
+    $('#loadingDialog div.progressbar').progressbar('option', 'value', parseInt(100*currentProgress/maxProgress));
+    if(currentProgress == maxProgress) {
+        setTimeout("$('#loadingDialog').dialog('close')", 2000);
+    }
+}
+function isProgressFinished(name) {
+    return progressFinisfed[name] == true;
+}
 
 $(function() {
+
+    $('#loadingDialog div.progressbar').progressbar({
+        value:currentProgress
+    });
+    $('#loadingDialog').dialog({
+        //        autoOpen: false,
+        modal: true,
+        resizable: false,
+        hide: 'fold',
+        title: 'Loading game',
+        open: function(event, ui) {
+            $('#loadingDialog').parents('div').children('div.ui-dialog-titlebar').remove();
+        }
+    });
+
     $.get('json/currentuser', function(data) {
         var r = null;
         if((r = parseJSON(data)) === undefined) {
@@ -13,8 +47,25 @@ $(function() {
         userId = r.content.id;
         userName = r.content.username;
         initMap();
+        setCurrentProgress('player');
+        setCurrentMapPosition();
     });
 });
+
+function setCurrentMapPosition() {
+    if(isProgressFinished('provinces') && isProgressFinished('world')) {
+        var pid = 0;
+        for(var i in provinces) {
+            if(provinces[i].owner.id == userId) {
+                pid = provinces[i].id;
+                break;
+            }
+        }
+        centerProvince(pid);
+    } else {
+        setTimeout('setCurrentMapPosition()', 250);
+    }
+}
 
 function processError(code, message) {
     $('#errorDialog').html(message);

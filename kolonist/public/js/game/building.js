@@ -22,6 +22,7 @@ $(function() {
                     buildings[b.type][b.level] = b;
                 }
             });
+            setCurrentProgress('buildings');
         }
     });
 

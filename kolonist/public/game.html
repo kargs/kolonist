@@ -4,7 +4,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Kolonist | The best game ty ever widział</title>
-        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
+        <!--        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />-->
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/sunny/jquery-ui.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
 
@@ -73,7 +74,7 @@
                 <img src="graph/loading.gif" alt="Loading..."/>
             </div>
             <div class="loaded">
-                <div class="resourcesbar">
+                <div class="resourcesbar ui-corner-all ui-widget-header">
                     <div class="name">settlers</div>
                     <div class="value settlers"></div>
                     <div class="name">soldiers</div>
@@ -99,6 +100,35 @@
                 </div>
             </div>
         </div>
+        <div id="loadingDialog">
+            <div class="title">
+                <span class="loading">Loading in progress, please wait...</span>
+                <span class="loaded">Game sucessfully loaded</span>
+            </div>
+            <div class="progressbar"></div>
+            <div class="progresDetails">
+                <table>
+                    <tbody>
+                        <tr class="provinces">
+                            <td><img src="graph/loading.gif" alt=""/></td>
+                            <td>Provinces</td>
+                        </tr>
+                        <tr class="buildings">
+                            <td><img src="graph/loading.gif" alt=""/></td>
+                            <td>Buildings</td>
+                        </tr>
+                        <tr class="player">
+                            <td><img src="graph/loading.gif" alt=""/></td>
+                            <td>Player</td>
+                        </tr>
+                        <tr class="world">
+                            <td><img src="graph/loading.gif" alt=""/></td>
+                            <td>World</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div id="errorDialog"></div>
         <div id="buildingView">
             <div class="buildingDetail">
@@ -110,6 +140,60 @@
         <div id="myProvincesDialog">
             <div>List of my provinces:</div>
             <div class="myProvincesList"></div>
+        </div>
+        <div id="enemyDialog">
+            <fieldset class="ui-widget ui-widget-content ui-corner-all fieldsetToogle visible">
+                <legend class="ui-widget-header ui-corner-all"><span class="ui-icon ui-icon-triangle-1-s">toggle</span>Province details</legend>
+                <div class="content">
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td>Name</td>
+                                <td><span class="provinceName"></span></td>
+                                <td rowspan="2">
+                                    <div class="additionalInfo">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="player">
+                                <td>Player</td>
+                                <td><span class="playerName"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <fieldset class="ui-widget ui-widget-content ui-corner-all fieldsetToogle battle hidden">
+                <legend class="ui-widget-header ui-corner-all"><span class="ui-icon ui-icon-triangle-1-n">toggle</span>Attack</legend>
+                <div class="content">
+                    <div class="scroll">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <input class="battleBtn" type="button" value="Battle"/>
+                </div>
+            </fieldset>
+        </div>
+        <div id="battleResultDialog">
+            <div class="won">You won the battle! Congratulations</div>
+            <div class="lost">You lost the battle! Try again another time!</div>
+            <div class="battleDetails">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </body>
 </html>

@@ -59,6 +59,7 @@ $(function(){
             });
             buildCache();
             initMap();
+            setCurrentProgress('provinces');
         }
     });
 
@@ -196,7 +197,7 @@ function initMap() {
     });
 
     // włączenie widoku provincji
-    $('#mapareaitems area').dblclick(function(event) {
+    $('#mapareaitems area').click(function(event) {
         event.preventDefault();
         showProvince($(this).attr('rel'));
     });
