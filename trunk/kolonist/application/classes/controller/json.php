@@ -211,11 +211,11 @@ class Controller_Json extends Controller_Default {
 
 			if ($attack == $defense) {
 				// Attacker has slight advantage
-				$attack += 0.001;
+				$attack += 1;
 			}
 
 			// Attacker loses few soldiers
-			$lostDecimal = $attack / ($attack - $defense) / ($attack + $defense);
+			$lostDecimal = $defense / $attack;
 			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
 
 			// Victim loses many soldiers
@@ -235,7 +235,7 @@ class Controller_Json extends Controller_Default {
 			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
 
 			// Victim loses few soldiers
-			$lostDecimal = $defense / ($defense - $attack) / ($defense + $attack);
+			$lostDecimal = $defense / $attack;
 			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->soldiers_count -= $victimLost;
 			$provinceToAttack->save();
