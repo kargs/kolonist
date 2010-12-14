@@ -10,11 +10,11 @@ class Controller_Json extends Controller_Default {
 	);
 
 	public $template = 'layout/json';
-        private $_timeStart;
+	private $_timeStart;
 
 
 	public function before() {
-                $this->_timeStart = time();
+		$this->_timeStart = time();
 		parent::before();
 
 		$this->view = array();
@@ -23,21 +23,21 @@ class Controller_Json extends Controller_Default {
 
 		$this->request->headers['Content-Type'] = 'text/plain';
 
-		$this->resourcesTemplateArray = (array)Kohana::config('resources');
+		$this->resourcesTemplateArray = (array) Kohana::config('resources');
 		$this->resourcesNames = array_keys($this->resourcesTemplateArray);
 	}
 	
 	public function after() {
 		$this->template->content = json_encode($this->view);
-                $this->template->status_time = time() - $this->_timeStart;
+		$this->template->status_time = time() - $this->_timeStart;
 
 		parent::after();
 	}
 
-        public function action_currentuser() {
-            $this->view['id'] = $this->user->id;
-            $this->view['username'] = $this->user->username;
-        }
+	public function action_currentuser() {
+		$this->view['id'] = $this->user->id;
+		$this->view['username'] = $this->user->username;
+	}
 
 	/**
 	 * Creates new building of type $building_type, and assignes it to the slot
@@ -208,24 +208,36 @@ class Controller_Json extends Controller_Default {
 		if ($attack >= $defense) {
 			// Attacker won
 			$result['won'] = true;
-		} else {
-			$result['won'] = false;
-			$losts = array();
-			$lostDecimal = ($defense - $attack) / ($defense + $attack);
-			foreach ($provincesInfo as $provinceInfo) {
-				$lost = array (
-					'provinceId' => $provinceInfo['province']->id,
-					'armylost' => (int)($lostDecimal * $provinceInfo['army']),
-				);
 
-				// Update the armies
-				$provinceInfo['province']->soldiers_count -= $lost['armylost'];
-				$provinceInfo['province']->save();
-
-				$losts[] = $lost;
+			if ($attack == $defense) {
+				// Attacker has slight advantage
+				$attack += 0.001;
 			}
 
-			$result['losts'] = $losts;
+			// Attacker loses few soldiers
+			$lostDecimal = $attack / ($attack - $defense) / ($attack + $defense);
+			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
+
+			// Victim loses many soldiers
+			$lostDecimal = ($attack - $defense) / ($attack + $defense);
+			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->soldiers_count -= $victimLost;
+
+			// Update province ownership
+			$provinceToAttack->user = $this->user;
+			$provinceToAttack->save();
+		} else {
+			// Attacker lost
+			$result['won'] = false;
+
+			// Attacker loose many soldiers
+			$lostDecimal = ($defense - $attack) / ($defense + $attack);
+			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
+
+			// Victim loses few soldiers
+			$lostDecimal = $defense / ($defense - $attack) / ($defense + $attack);
+			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->soldiers_count -= $victimLost;
 		}
 
 		$this->view = $result;
@@ -341,6 +353,24 @@ class Controller_Json extends Controller_Default {
 		foreach ($this->resourcesNames as $resource) {
 			$province->{$resource . '_count'} -= $buildingstat->{$resource . '_requirement'};
 		}
+	}
+
+	protected function computeFightLosses($provincesInfo, $lostDecimal) {
+		$losts = array();
+		foreach ($provincesInfo as $provinceInfo) {
+			$lost = array(
+				'provinceId' => $provinceInfo['province']->id,
+				'armylost' => (int) ($lostDecimal * $provinceInfo['army']),
+			);
+
+			// Update the armies
+			$provinceInfo['province']->soldiers_count -= $lost['armylost'];
+			$provinceInfo['province']->save();
+
+			$losts[] = $lost;
+		}
+
+		return $losts;
 	}
 
 	protected function success($message) {
