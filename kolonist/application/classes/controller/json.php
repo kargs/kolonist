@@ -217,6 +217,7 @@ class Controller_Json extends Controller_Default {
 			// Attacker loses few soldiers
 			$lostDecimal = $defense / $attack;
 			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
+			$result['lostDecimal'] = $lostDecimal;
 
 			// Victim loses many soldiers
 			$lostDecimal = ($attack - $defense) / ($attack + $defense);
@@ -233,6 +234,7 @@ class Controller_Json extends Controller_Default {
 			// Attacker loose many soldiers
 			$lostDecimal = ($defense - $attack) / ($defense + $attack);
 			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
+			$result['lostDecimal'] = $lostDecimal;
 
 			// Victim loses few soldiers
 			$lostDecimal = $defense / $attack;
