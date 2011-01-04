@@ -4,20 +4,22 @@ class Controller_Cron extends Controller_Default {
 
 	protected $resourcesTemplateArray;
 	protected $resourcesNames;
+	protected $options;
 
 	public function before() {
 		parent::before();
 
-		$this->resourcesTemplateArray = Kohana::config('resources');
+		$this->resourcesTemplateArray = (array) Kohana::config('resources');
 		$this->resourcesNames = array_keys($this->resourcesTemplateArray);
+		$this->options = Kohana::config('options');
 	}
 
 	public function action_cycle() {
-		// TODO: sprawdzic czy wywolanie nie nastapilo za wczesnie
+		$lastcron = ORM::factory('option')->where('name', '=', 'lastcron')->find();
 
-		// TODO: wyliczyc settlers_gain w kazdej prowincji, i brac pod uwage prowincjowy settlers_max
-
-		// TODO: wziac pod uwage workersow
+		if (time() < $lastcron->value + $this->options->cronInterval) {
+			die('Request made to soon');
+		}
 
 		$provinces = ORM::factory('province')->find_all();
 
@@ -26,6 +28,10 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		// TODO: dodac info o zdarzeniach
+
+		$lastcron->value = time();
+		$lastcron->save();
+		die('Succeed');
 	}
 
 	protected function cycleProvince($province) {
@@ -45,8 +51,8 @@ class Controller_Cron extends Controller_Default {
 			$counts_temp = $counts;
 			$somethingLacking = FALSE;
 
-			foreach ($this->resourcesNames as $resource) {
-				$counts_temp[$resource] += $buildingstat->{$resource . '_gain'};
+			foreach ($this->resourcesNames as $resource) {if($buildingstat->workers_max == null) var_dump($building->id);
+				$counts_temp[$resource] += $buildingstat->{$resource . '_gain'} * ((float)$building->workers_assigned / $buildingstat->workers_max);
 			}
 
 			foreach ($this->resourcesNames as $resource) {
