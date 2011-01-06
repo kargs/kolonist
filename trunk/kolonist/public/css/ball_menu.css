@@ -34,7 +34,7 @@ div.ball_menu_item img {
 }
 
 div.ball_item div.bgtoggle a {
-    background-position: bottom;
+    background-position: top;
     background-repeat: no-repeat;
     display: block;
     width: 50px;
@@ -48,8 +48,14 @@ div.ball_item div.bgtoggle a span {
     font-weight: bold;
 }
 div.ball_item div.bgtoggle:hover a {
-    background-position: top;
+    background-position: bottom;
 }
 div.ball_item div.develop a {
     background-image: url(../graph/hammer.png);
+}
+div.ball_item div.info a {
+    background-image: url(../graph/info.png);
+}
+div.ball_item div.destroy a {
+    background-image: url(../graph/destroy.png);
 }

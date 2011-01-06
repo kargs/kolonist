@@ -237,7 +237,7 @@ class Controller_Json extends Controller_Default {
 			$result['lostDecimal'] = $lostDecimal;
 
 			// Victim loses few soldiers
-			$lostDecimal = $defense / $attack;
+			$lostDecimal = 1 - $lostDecimal;
 			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->soldiers_count -= $victimLost;
 			$provinceToAttack->save();

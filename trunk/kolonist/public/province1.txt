@@ -1,0 +1,45 @@
+{
+    "status": {
+        "code": "OK",
+        "message": "Wystąpił błąd"
+    },
+    "content": {
+        "id": 1,
+        "name": "KamKaro",
+        "slots": [
+            {
+                "building": {
+                    "type": "stodola",
+                    "level": 4
+                },
+                "actions": [
+                    
+                ]
+            },
+            {
+                "building": {
+                    "type": "stodola",
+                    "level": 4
+                }
+            },
+            {
+                "building": {
+                    "type": "stodola",
+                    "level": 4
+                }
+            },
+            {
+                "building": {
+                    "type": "stodola",
+                    "level": 4
+                }
+            },
+            {
+                "building": {
+                    "type": "kukurydza",
+                    "level": 4
+                }
+            }
+        ]
+    }
+}

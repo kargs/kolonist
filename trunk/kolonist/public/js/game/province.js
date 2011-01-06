@@ -79,6 +79,13 @@ $(function() {
                 html += '</td></tr>';
             });
             $('table tbody', $battle).html(html);
+            alert(r.lostDecimal);
+            var enemyLost = Math.round(parseFloat(r.lostDecimal)*100);
+            var youLost = 100 - enemyLost;
+//            $('#battleResultDialog .enemyLost').html(enemyLost);
+//            $('#battleResultDialog .yourLost').html(youLost);
+            $('#battleResultDialog .enemyLost').html(youLost);
+            $('#battleResultDialog .yourLost').html(enemyLost);
             $('#enemyDialog').dialog('close');
             $('#battleResultDialog').dialog('open');
         });
@@ -171,7 +178,7 @@ function updateProvince(id) {
                         }
                     }
                     balls[balls.length] = {
-                        css: 'bgtoggle develop',
+                        css: 'bgtoggle info',
                         title: 'More',
                         params: [p.id, b],
                         click: function (e, params) {
@@ -179,7 +186,7 @@ function updateProvince(id) {
                         }
                     }
                     balls[balls.length] = {
-                        css: 'bgtoggle develop',
+                        css: 'bgtoggle destroy',
                         title: 'Destroy',
                         params: [p.id, b.slot_index],
                         click: function (e, params) {
