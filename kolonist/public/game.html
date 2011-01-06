@@ -182,8 +182,19 @@
             </fieldset>
         </div>
         <div id="battleResultDialog">
-            <div class="won">You won the battle! Congratulations</div>
-            <div class="lost">You lost the battle! Try again another time!</div>
+            <div class="won">
+                <img src="graph/win.png" alt="Win"/>
+                <div>You won the battle! Congratulations</div>
+            </div>
+            <div class="lost">
+                <img src="graph/lost.png" alt="Win"/>
+                <div>You lost the battle! Try again another time!</div>
+            </div>
+            <br class="clear" />
+            <div>
+                Your lost:&nbsp; <span class="yourLost"></span>%<br/>
+                Enemy lost: <span class="enemyLost"></span>%
+            </div>
             <div class="battleDetails">
                 <table>
                     <tbody>
