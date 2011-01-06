@@ -24,6 +24,7 @@ class Controller_Cron extends Controller_Default {
 		$provinces = ORM::factory('province')->find_all();
 
 		foreach ($provinces as $province) {
+			$this->debug('Going through province ' . $province->id);
 			$this->cycleProvince($province);
 		}
 
@@ -40,35 +41,43 @@ class Controller_Cron extends Controller_Default {
 			$counts[$resource] = $province->{$resource . '_count'};
 		}
 
-		$gains = $maxes = $this->resourcesTemplateArray;
-
 		foreach ($province->buildings->find_all() as $building) {
 			if (!$building) {
 				continue;
 			}
 
+			$this->debug('Found building ' . $building->id);
 			$buildingstat = $building->buildingstat;
-			$counts_temp = $counts;
+			$changes = $this->resourcesTemplateArray;
 			$somethingLacking = FALSE;
 
-			foreach ($this->resourcesNames as $resource) {if($buildingstat->workers_max == null) var_dump($building->id);
-				$counts_temp[$resource] += $buildingstat->{$resource . '_gain'} * ((float)$building->workers_assigned / $buildingstat->workers_max);
-			}
-
 			foreach ($this->resourcesNames as $resource) {
-				if ($counts_temp[$resource] < 0) {
-					$somethingLacking = TRUE;
-					break;
-				} else if ($counts_temp[$resource] > $buildingstat->{$resource . '_max'}) {
-					$counts_temp[$resource] = $buildingstat->{$resource . '_max'};
+				$change = $buildingstat->{$resource . '_gain'} * ((float)$building->workers_assigned / $buildingstat->workers_max);
+
+				if ($change != 0) {
+					$this->debug('Changing ' . $resource . ' by ' . $change);
+
+					$changes[$resource] = $change;
+
+					if ($change > $buildingstat->{$resource . '_max'}) {
+						$change = $buildingstat->{$resource . '_max'};
+						$this->debug('Max value achieved for ' . $resource);
+					} else if ($counts[$resource] - $change < 0) {
+						$somethingLacking = TRUE;
+						break;
+					}
 				}
 			}
 
 			if ($somethingLacking) {
+				$this->debug('Unsufficient resources for the building to work');
 				$building->stopped = TRUE;
 			} else {
 				$building->stopped = FALSE;
-				$counts = $counts_temp;
+				foreach ($this->resourcesNames as $resource) {
+					$counts[$resource] += $changes[$resource];
+					$this->debug('Now ' . $resource . ' is ' . $counts[$resource]);
+				}
 			}
 
 			$building->save();
@@ -79,5 +88,9 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		$province->save();
+	}
+
+	protected function debug($message) {
+		echo '[' . date('H:i:s') . '] ' . $message . "\n";
 	}
 }
