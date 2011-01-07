@@ -253,6 +253,9 @@ class Controller_Json extends Controller_Default {
 			// Victim loses many soldiers
 			$provinceToAttack->soldiers_count -= $looserLossDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->armament_count -= $looserLossDecimal * $provinceToAttack->armament_count;
+			if ($provinceToAttack->user != NULL) {
+				Utils::addInfo($provinceToAttack->user, 'You lost province ' . $provinceToAttack->name . '!');
+			}
 
 			// Update province ownership
 			$provinceToAttack->user = $this->user;
@@ -269,6 +272,9 @@ class Controller_Json extends Controller_Default {
 			$provinceToAttack->soldiers_count -= $winnerLossDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->armament_count -= $winnerLossDecimal * $provinceToAttack->armament_count;
 			$provinceToAttack->save();
+			if ($provinceToAttack->user != NULL) {
+				Utils::addInfo($provinceToAttack->user, 'Your province was ' . $provinceToAttack->name . 'was attacked but it survived.');
+			}
 		}
 
 		$this->view = $result;
@@ -351,7 +357,18 @@ class Controller_Json extends Controller_Default {
 			$this->view['provinces'][] = $jsonProvince;
 		}
 
-		// TODO: info o zmianach
+//		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->where('seen', '=', 0)->find_all();
+//
+//		foreach ($infos as $info) {
+//			$jsonInfo['message'] = $info->message;
+//			$jsonInfo['date'] = $info->date;
+//
+//			$this->view['infos'][] = $jsonInfo;
+//
+//			// TODO: Delete after seen?
+//			$info->seen = TRUE;
+//			$info->save();
+//		}
 	}
 
 	protected function isUserOwnerOfProvince($province) {
