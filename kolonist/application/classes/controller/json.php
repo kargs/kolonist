@@ -201,13 +201,18 @@ class Controller_Json extends Controller_Default {
 		// compute the attack
 		$attack = 0;
 		foreach ($provincesInfo as $provinceInfo) {
+			if ($provinceInfo['province']->soldiers_count == 0) continue;
 			$armament_gain = $this->computeArmamentGain($provinceInfo['province']->armament_count / $provinceInfo['province']->soldiers_count);
 			$attack += $provinceInfo['army'] * $armament_gain;
 		}
 
 		// compute the defense
-		$armament_gain = $this->computeArmamentGain($provinceToAttack->armament_count / $provinceToAttack->soldiers_count);
-		$defense = $provinceToAttack->soldiers_count * $armament_gain;
+		if ($provinceToAttack->soldiers_count > 0) {
+			$armament_gain = $this->computeArmamentGain($provinceToAttack->armament_count / $provinceToAttack->soldiers_count);
+			$defense = $provinceToAttack->soldiers_count * $armament_gain;
+		} else {
+			$defense = 0;
+		}
 
 		// very little chance for absolute luck
 		if (rand(0, abs($attack - $defense)) < $this->options->fightAbsoluteLuckLevel) {
@@ -217,18 +222,23 @@ class Controller_Json extends Controller_Default {
 			$attack += rand(-$attack, $defense);
 		}
 
-		if ($attack == $defense) {
+		if ($attack == $defense || $defense == 0) {
 			// Still equal? No way, defensor has real luck!
 			$defense += 1;
+		} if ($attack == 0) {
+			// Can't be 0
+			$attack +=1;
 		}
 
 		// Compute the gains and losses
-		$difference = abs($attack - $defense);
-		$looserLossPercentage = 50 + ($difference / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
-		$looserLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
+		$ratio = ($attack > $defense) ? ($attack / $defense) : ($defense / $attack);
+		if ($ratio > $this->options->fightRatioCap) $ratio = $this->options->fightRatioCap;
+
+		$looserLossPercentage = 50 + ($ratio / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
+		$looserLossRandomPercentage = $this->computeRandomLoss($ratio);
 		$looserLossDecimal = ($looserLossPercentage + $looserLossRandomPercentage) / (float) 100;
 		$winnerLossPercentage = 100 - $looserLossPercentage;
-		$winnerLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
+		$winnerLossRandomPercentage = -$this->computeRandomLoss($ratio);
 		$winnerLossDecimal = ($winnerLossPercentage + $winnerLossRandomPercentage) / (float) 100;
 
 
@@ -379,10 +389,16 @@ class Controller_Json extends Controller_Default {
 	protected function computeFightLosses($provincesInfo, $lostDecimal) {
 		$losts = array();
 		foreach ($provincesInfo as $provinceInfo) {
+			if ($provinceInfo['province']->soldiers_count > 0) {
+				$armamentLost = (int) ($lostDecimal * ((float)$provinceInfo['army'] / $provinceInfo['province']->soldiers_count) * $provinceInfo['province']->armament_count);
+			} else {
+				$armamentLost = 0;
+			}
+
 			$lost = array(
 				'provinceId' => $provinceInfo['province']->id,
 				'armylost' => (int) ($lostDecimal * $provinceInfo['army']),
-				'armamentlost' => (int) ($lostDecimal * ((float)$provinceInfo['army'] / $provinceInfo['province']->soldiers_count) * $provinceInfo['province']->armament_count),
+				'armamentlost' => $armamentLost,
 			);
 
 			// Update the armies
@@ -397,12 +413,20 @@ class Controller_Json extends Controller_Default {
 	}
 
 	protected function computeArmamentGain($armamentArmyRatio) {
-		$armamentGain = log($armamentArmyRatio) + 1;
+		$armamentGain = log10($armamentArmyRatio) + 1;
 		if ($armamentGain < 0) {
 			$armamentGain = 0;
 		}
 
 		return $armamentGain;
+	}
+
+	protected function computeRandomLoss($ratio) {
+		// Maximal random loss value depends on fight ratio (the bigger ratio is, the lower maximal loss value)
+		$max = (1 - ($ratio / $this->options->fightRatioCap)) * $this->options->fightRandomLoss;
+		// Minimal value is proportional to maximal value (for example, <-20,20>, <-40,0>, <-30,10> etc)
+		$min = -$this->options->fightRandomLoss * 2 + $max;
+		return rand(-(int)$min, (int)$max);
 	}
 
 	protected function success($message) {
