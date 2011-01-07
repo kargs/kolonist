@@ -4,6 +4,7 @@ class Controller_Json extends Controller_Default {
 
 	protected $resourcesTemplateArray;
 	protected $resourcesNames;
+	protected $options;
 
 	public $access = array(
 		':default' => Controller_Default::ACCESS_ANYONE,
@@ -25,6 +26,7 @@ class Controller_Json extends Controller_Default {
 
 		$this->resourcesTemplateArray = (array) Kohana::config('resources');
 		$this->resourcesNames = array_keys($this->resourcesTemplateArray);
+		$this->options = Kohana::config('options');
 	}
 	
 	public function after() {
@@ -199,30 +201,48 @@ class Controller_Json extends Controller_Default {
 		// compute the attack
 		$attack = 0;
 		foreach ($provincesInfo as $provinceInfo) {
-			$attack += $provinceInfo['army'] * $provinceInfo['province']->armament_count;
+			$armament_gain = $provinceInfo['province']->armament_count / $provinceInfo['province']->soldiers_count;
+			$attack += $provinceInfo['army'] * $armament_gain;
 		}
 
 		// compute the defense
-		$defense = $provinceToAttack->soldiers_count * $provinceToAttack->armament_count;
+		$armament_gain = $provinceToAttack->armament_count / $provinceToAttack->soldiers_count;
+		$defense = $provinceToAttack->soldiers_count * $armament_gain;
 
-		if ($attack >= $defense) {
+		// very little chance for absolute luck
+		if (rand(0, abs($attack - $defense)) < $this->options->fightAbsoluteLuckLevel) {
+			// If the armies are equal, it's 100% that the fight depends on luck
+			// The stronger the difference, the less chance for solving fight by luck
+			// Luck can add or substract up to 100% of $defense value
+			$attack += rand(-$attack, $defense);
+		}
+
+		if ($attack == $defense) {
+			// Still equal? No way, defensor has real luck!
+			$defense += 1;
+		}
+
+		// Compute the gains and losses
+		$difference = abs($attack - $defense);
+		$looserLossPercentage = 50 + ($difference / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
+		$looserLossRandomPercentage = rand(-$this->option->fightRandomLoss, $this->option->fightRandomLoss);
+		$looserLossDecimal = ($looserLossPercentage + $looserLossRandomPercentage) / (float) 100;
+		$winnerLossPercentage = 100 - $looserLossDecimal;
+		$winnerLossRandomPercentage = rand(-$this->option->fightRandomLoss, $this->option->fightRandomLoss);
+		$winnerLossDecimal = ($winnerLossPercentage + $winnerLossRandomPercentage) / (float) 100;
+
+
+		if ($attack > $defense) {
 			// Attacker won
 			$result['won'] = true;
 
-			if ($attack == $defense) {
-				// Attacker has slight advantage
-				$attack += 1;
-			}
-
 			// Attacker loses few soldiers
-			$lostDecimal = $defense / $attack;
-			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
-			$result['lostDecimal'] = $lostDecimal;
+			$result['losts'] = $this->computeFightLosses($provincesInfo, $winnerLossDecimal);
+			$result['lostDecimal'] = $winnerLossDecimal;
 
 			// Victim loses many soldiers
-			$lostDecimal = ($attack - $defense) / ($attack + $defense);
-			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
-			$provinceToAttack->soldiers_count -= $victimLost;
+			$provinceToAttack->soldiers_count -= $looserLossDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->armament_count -= $looserLossDecimal * $provinceToAttack->armament_count;
 
 			// Update province ownership
 			$provinceToAttack->user = $this->user;
@@ -232,14 +252,12 @@ class Controller_Json extends Controller_Default {
 			$result['won'] = false;
 
 			// Attacker loose many soldiers
-			$lostDecimal = ($defense - $attack) / ($defense + $attack);
-			$result['losts'] = $this->computeFightLosses($provincesInfo, $lostDecimal);
-			$result['lostDecimal'] = $lostDecimal;
+			$result['losts'] = $this->computeFightLosses($provincesInfo, $looserLossDecimal);
+			$result['lostDecimal'] = $looserLossDecimal;
 
 			// Victim loses few soldiers
-			$lostDecimal = 1 - $lostDecimal;
-			$victimLost = $lostDecimal * $provinceToAttack->soldiers_count;
-			$provinceToAttack->soldiers_count -= $victimLost;
+			$provinceToAttack->soldiers_count -= $winnerLossDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->armament_count -= $winnerLossDecimal * $provinceToAttack->armament_count;
 			$provinceToAttack->save();
 		}
 
@@ -364,10 +382,12 @@ class Controller_Json extends Controller_Default {
 			$lost = array(
 				'provinceId' => $provinceInfo['province']->id,
 				'armylost' => (int) ($lostDecimal * $provinceInfo['army']),
+				'armamentlost' => (int) ($lostDecimal * ((float)$provinceInfo['army'] / $provinceInfo['province']->soldiers_count) * $provinceInfo['province']->armament_count),
 			);
 
 			// Update the armies
 			$provinceInfo['province']->soldiers_count -= $lost['armylost'];
+			$provinceInfo['province']->armament_count -= $lost['armamentlost'];
 			$provinceInfo['province']->save();
 
 			$losts[] = $lost;
