@@ -227,7 +227,7 @@ class Controller_Json extends Controller_Default {
 		$looserLossPercentage = 50 + ($difference / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
 		$looserLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
 		$looserLossDecimal = ($looserLossPercentage + $looserLossRandomPercentage) / (float) 100;
-		$winnerLossPercentage = 100 - $looserLossDecimal;
+		$winnerLossPercentage = 100 - $looserLossPercentage;
 		$winnerLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
 		$winnerLossDecimal = ($winnerLossPercentage + $winnerLossRandomPercentage) / (float) 100;
 
@@ -397,7 +397,7 @@ class Controller_Json extends Controller_Default {
 	}
 
 	protected function computeArmamentGain($armamentArmyRatio) {
-		$armamentGain = log($armamentArmyRatio);
+		$armamentGain = log($armamentArmyRatio) + 1;
 		if ($armamentGain < 0) {
 			$armamentGain = 0;
 		}
