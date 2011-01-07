@@ -62,7 +62,7 @@ class Controller_Cron extends Controller_Default {
 					if ($change > $buildingstat->{$resource . '_max'}) {
 						$change = $buildingstat->{$resource . '_max'};
 						$this->debug('Max value achieved for ' . $resource);
-						if ($province->user != NULL) {
+						if ($province->user_id != NULL) {
 							Utils::addInfo($province->user, 'Province ' . $province->name . ' cannot store more ' . $resource);
 						}
 					} else if ($counts[$resource] - $change < 0) {
@@ -74,7 +74,7 @@ class Controller_Cron extends Controller_Default {
 
 			if ($somethingLacking) {
 				$this->debug('Insufficient resources for the building to work');
-				if ($province->user != NULL) {
+				if ($province->user_id != NULL) {
 					Utils::addInfo($province->user, 'The ' . $buildingstat->type . ' in province ' . $province->name . ' cannot work because of infufficient resources.');
 				}
 				$building->stopped = TRUE;
