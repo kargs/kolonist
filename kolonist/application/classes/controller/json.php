@@ -201,12 +201,12 @@ class Controller_Json extends Controller_Default {
 		// compute the attack
 		$attack = 0;
 		foreach ($provincesInfo as $provinceInfo) {
-			$armament_gain = $provinceInfo['province']->armament_count / $provinceInfo['province']->soldiers_count;
+			$armament_gain = $this->computeArmamentGain($provinceInfo['province']->armament_count / $provinceInfo['province']->soldiers_count);
 			$attack += $provinceInfo['army'] * $armament_gain;
 		}
 
 		// compute the defense
-		$armament_gain = $provinceToAttack->armament_count / $provinceToAttack->soldiers_count;
+		$armament_gain = $this->computeArmamentGain($provinceToAttack->armament_count / $provinceToAttack->soldiers_count);
 		$defense = $provinceToAttack->soldiers_count * $armament_gain;
 
 		// very little chance for absolute luck
@@ -225,10 +225,10 @@ class Controller_Json extends Controller_Default {
 		// Compute the gains and losses
 		$difference = abs($attack - $defense);
 		$looserLossPercentage = 50 + ($difference / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
-		$looserLossRandomPercentage = rand(-$this->option->fightRandomLoss, $this->option->fightRandomLoss);
+		$looserLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
 		$looserLossDecimal = ($looserLossPercentage + $looserLossRandomPercentage) / (float) 100;
 		$winnerLossPercentage = 100 - $looserLossDecimal;
-		$winnerLossRandomPercentage = rand(-$this->option->fightRandomLoss, $this->option->fightRandomLoss);
+		$winnerLossRandomPercentage = rand(-$this->options->fightRandomLoss, $this->options->fightRandomLoss);
 		$winnerLossDecimal = ($winnerLossPercentage + $winnerLossRandomPercentage) / (float) 100;
 
 
@@ -394,6 +394,15 @@ class Controller_Json extends Controller_Default {
 		}
 
 		return $losts;
+	}
+
+	protected function computeArmamentGain($armamentArmyRatio) {
+		$armamentGain = log($armamentArmyRatio);
+		if ($armamentGain < 0) {
+			$armamentGain = 0;
+		}
+
+		return $armamentGain;
 	}
 
 	protected function success($message) {
