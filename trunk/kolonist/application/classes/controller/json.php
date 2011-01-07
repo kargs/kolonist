@@ -157,7 +157,8 @@ class Controller_Json extends Controller_Default {
 		foreach ($provinces as $province) {
 			$armyinfo[] = array(
 				'provinceId' => $province->id,
-				'maxArmy' => $province->soldiers_count
+				'maxArmy' => $province->soldiers_count,
+				'armament' => $province->armament_count,
 			);
 		}
 
@@ -283,7 +284,7 @@ class Controller_Json extends Controller_Default {
 	/**
 	 * 
 	 */
-	public function action_checkrequirementsforcreate($province_id) {
+	public function action_getrequirementsforcreate($province_id) {
 
 	}
 
@@ -305,12 +306,18 @@ class Controller_Json extends Controller_Default {
 		$this->view['name'] = $province->name;
 		$this->view['slots'] = array();
 
+		$maxes = $this->resourcesTemplateArray;
+
 		foreach($province->buildings->find_all() as $building) {
 			if ($building) {
 				$jsonSlot['building']['slot_index'] = $building->slot_index;
 				$jsonSlot['building']['type'] = $building->buildingstat->type;
 				$jsonSlot['building']['level'] = $building->level;
 				$jsonSlot['building']['workers'] = $building->workers_assigned;
+
+				foreach ($this->resourcesNames as $resource) {
+					$maxes[$resource] += $building->buildingstat->{$resource . '_max'};
+				}
 			} else {
 				$jsonSlot['building'] = null;
 			}
@@ -324,6 +331,8 @@ class Controller_Json extends Controller_Default {
 		$this->view['resources']['wood'] = $province->wood_count;
 		$this->view['resources']['iron'] = $province->iron_count;
 		$this->view['resources']['brick'] = $province->brick_count;
+
+		$this->view['maxes'] = $maxes;
 	}
 
 	/**
