@@ -26,6 +26,6 @@
 
             </div>
         </div>
-        <div class="footer"></div>
+        <div class="footer"><p>Copyright &copy; 2011 The Kolonist Team</p></div>
     </body>
 </html>
