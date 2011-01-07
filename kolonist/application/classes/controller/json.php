@@ -254,7 +254,7 @@ class Controller_Json extends Controller_Default {
 			// Victim loses many soldiers
 			$provinceToAttack->soldiers_count -= $looserLossDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->armament_count -= $looserLossDecimal * $provinceToAttack->armament_count;
-			if ($provinceToAttack->user != NULL) {
+			if ($provinceToAttack->user_id != 0) {
 				Utils::addInfo($provinceToAttack->user, 'You lost province ' . $provinceToAttack->name . '!');
 			}
 
@@ -273,7 +273,7 @@ class Controller_Json extends Controller_Default {
 			$provinceToAttack->soldiers_count -= $winnerLossDecimal * $provinceToAttack->soldiers_count;
 			$provinceToAttack->armament_count -= $winnerLossDecimal * $provinceToAttack->armament_count;
 			$provinceToAttack->save();
-			if ($provinceToAttack->user != NULL) {
+			if ($provinceToAttack->user_id != NULL) {
 				Utils::addInfo($provinceToAttack->user, 'Your province was ' . $provinceToAttack->name . 'was attacked but it survived.');
 			}
 		}
