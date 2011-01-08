@@ -45,7 +45,7 @@ body
     margin-top: 20px;
     padding-top: 20px;
     font-size: 0.8em;
-    height: 100px;
+    height: 80px;
     background: #9BBFC7;
     filter: alpha(opacity=60);
     -moz-opacity: 0.60;
@@ -158,9 +158,11 @@ div.mainContent div.fieldbundle input {
     font-weight: bold;
 }
 
-
 form div.error {
+    float:right;
+    width: 300px;
     text-align: right;
+    font-size: 0.6em;
     color: red;
     font-style: italic;
 }
