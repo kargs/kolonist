@@ -19,6 +19,7 @@
         <script type="text/javascript" src="js/game/building.js"></script>
         <script type="text/javascript" src="js/game/province.js"></script>
         <script type="text/javascript" src="js/game/cycle.js"></script>
+        <script type="text/javascript" src="js/game/translator.js"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -49,15 +50,15 @@
                             Drągi
                         </div>
                         <a class="moveHandle" href="#">Przeciągnij</a>
-                        <a href="javascript:showProvince(2);">Pokaż prowincję</a>
-                        <input type="text" id="px" size="3" />
-                        <input type="text" id="py" size="3" />
-                        <input type="button" id="btn" value="Go" />
-                        <input type="text" id="inc" size="3" value="10" />
-                        <input type="button" id="left" value="left" />
-                        <input type="button" id="right" value="right" />
-                        <input type="button" id="up" value="up" />
-                        <input type="button" id="down" value="down" />
+                        <!--                        <a href="javascript:showProvince(2);">Pokaż prowincję</a>
+                                                <input type="text" id="px" size="3" />
+                                                <input type="text" id="py" size="3" />
+                                                <input type="button" id="btn" value="Go" />
+                                                <input type="text" id="inc" size="3" value="10" />
+                                                <input type="button" id="left" value="left" />
+                                                <input type="button" id="right" value="right" />
+                                                <input type="button" id="up" value="up" />
+                                                <input type="button" id="down" value="down" />-->
                     </div>
                 </div>
             </div>
@@ -97,6 +98,38 @@
                     <div id="slot2" class="slot"></div>
                     <div id="slot3" class="slot"></div>
                     <div id="slot4" class="slot"></div>
+                </div>
+            </div>
+        </div>
+        <div id="buildingChooser" class="buildingCart">
+            <div class="title">Building chooser</div>
+            <div class="buildingsList"></div>
+        </div>
+        <div id="buildingUpgrader" class="buildingCart">
+            <div class="title">Building upgrade</div>
+            <div class="upgrader">
+                <div class="details">
+                    <div class="left">
+                        <div class="avatar">
+                            <img src="" alt=""/>
+                        </div>
+                        <div class="type"></div>
+                        <div class="levelWrapper">
+                            Level
+                            <span class="level"></span>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <button class="buildActionButton upgradeAction"></button>
+                        <div class="upgrateUnable">Not enought resourses to&nbsp;upgrade</div>
+                        <h2>Requirement</h2>
+                        <div class="requItems"></div>
+                    </div>
+                    <br class="clear"/>
+                </div>
+                <div class="comparerWrapper">
+                    <div class="comparer"></div>
+                    <br class="clear"/>
                 </div>
             </div>
         </div>

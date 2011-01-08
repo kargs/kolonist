@@ -52,7 +52,7 @@ function buildBallMenu(context, options, balls) {
     if(options.id == undefined) {
         options.id = 'menuBalls_'+Math.floor((Math.random()*100000));
     }
-    r = '<div id="'+options.id+'" class="ball_item '+options.css+'" style="'+options.style+'">';
+    var r = '<div id="'+options.id+'" class="ball_item '+options.css+'" style="'+options.style+'">';
     r += '<div class="ball_content">';
     if(!(options.img == undefined)) {
         r += '<img src="'+options.img+'" alt="" />';
@@ -90,6 +90,11 @@ function buildBallMenu(context, options, balls) {
             balls[i].click(event, balls[i].params);
         });
     });
+    if(!(options.click === undefined) && options.click != null) {
+        $('#'+options.id+ ' .ball_content').click(function(event) {
+            options.click(event, options.params);
+        });
+    }
     initBallMenu(context);
 }
 

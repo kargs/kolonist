@@ -14,7 +14,7 @@
         <div class="mainWrapper">
             <div class="logo"></div>
             <ul class="menu">
-                <li><a id="start" href="<?php echo url::site('start') ?>"></a></li>
+                <li><a id="start" href="<?php echo url::site('welcome/index') ?>"></a></li>
                 <li><a id="rules" href="<?php echo url::site('info/rules') ?>"></a></li>
                 <li><a id="screens" href="<?php echo url::site('info/screens') ?>"></a></li>
                 <li><a id="account" href="<?php echo url::site('user/index') ?>"></a></li>

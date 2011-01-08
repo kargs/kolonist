@@ -5,7 +5,7 @@
 <div class="login_form">
     <?php echo Request::subrequest('user/login')->execute()->response ?>
 </div>
-<a class="register_btn" href="<?=url::base();?>user/register">Nie masz konta? Zarejestruj się!</a>
+<a class="register_btn" href="<?=url::base();?>user/register">No account? Register now!</a>
 <div class="register_form">
     <?php echo Request::subrequest('user/register')->execute()->response ?>
 </div>

@@ -5,6 +5,8 @@ $(function(){
     });
     $('.register_form').dialog({
         autoOpen: false,
-        modal: true
+        modal: true,
+        resizable:false,
+        title: 'Registration'
     });
 });

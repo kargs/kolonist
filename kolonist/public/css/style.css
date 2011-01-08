@@ -2,26 +2,29 @@ body
 {
     margin:0;
     padding: 0;
-    background: url(../graphics/tloM.png) repeat;
+    background: url(../graphics/background.jpg) repeat;
     text-align: center;
 }
 
 .mainWrapper
 {
-    width:813px;
+    width:850px;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+    background: url(../graphics/main.png) top no-repeat;
+    margin-top: 10px;
+    height: 800px;
 }
 
 .wrapper
 {
-    background: url(../graphics/mapa.png) bottom no-repeat;
+    
 }
 
 .logo
 {
-    background: url(../graphics/top.png) bottom no-repeat;
+/*    background: url(../graphics/top.png) bottom no-repeat;*/
     height: 360px;
 }
 
@@ -30,23 +33,30 @@ body
     clear: both;
     margin-left: 50px;
     margin-right: 50px;
-    padding: 80px;
+    padding: 50px;
     padding-bottom: 100px;
     text-align: center;
+    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+    font-size: 20px;
 }
 
 .footer
 {
     margin-top: 20px;
     font-size: 0.8em;
+    height: 100px;
+    background: #9BBFC7;
+    filter: alpha(opacity=60);
+    -moz-opacity: 0.60;
+    opacity: 0.60;
 }
 
 .menu
 {
     margin:0;
     padding: 0;
-    margin-left: 100px;
-    margin-top: -50px;
+    margin-left: 80px;
+    margin-top: -55px;
     height: 50px;
     list-style: none;
 }
@@ -55,9 +65,9 @@ body
 {
     display: block;
     text-decoration: none;
-    width: 110px;
+    width: 130px;
     height: 40px;
-    margin-right: 55px;
+    margin-right: 45px;
     filter: alpha(opacity=99);
     -moz-opacity: 0.99;
     opacity: 0.99;
@@ -77,12 +87,12 @@ body
 
 #account
 {
-    background: url(../graphics/konto.png);
+    background: url(../graphics/account.png);
 }
 
 #rules
 {
-    background: url(../graphics/zasady.png);
+    background: url(../graphics/rules.png);
 }
 
 #screens
@@ -99,6 +109,12 @@ body
 div.mainContent div.fieldbundle label {
     display: inline-block;
     width: 130px;
+    padding: 10px;
+}
+
+div.mainContent .register_btn{
+    margin: 20px;
+    display: inline-block;
 }
 
 div.mainContent div.fieldbundle input {
@@ -108,4 +124,35 @@ div.mainContent div.fieldbundle input {
     border: none;
     background: url(../graphics/textbox.png) transparent no-repeat;
     padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 10px;
+}
+
+.confirmRegisterButton{
+    margin-top: 15px;
+    margin-left: 90px;
+}
+
+.register_form .field label{
+    width: 90px;
+    display: inline-block;
+    margin: 5px;
+}
+
+.register_form .field input{
+    width: 110px;
+    margin:2px;
+}
+
+
+/*    index.php    */
+.imageDiv{
+    float:left;
+    margin-top: -40px;
+    margin-left: -30px;
+}
+
+.textDiv{
+    text-align: center;
+    font-weight: bold;
 }
