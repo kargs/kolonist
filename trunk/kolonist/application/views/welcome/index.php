@@ -6,5 +6,5 @@
 </div>
 
 <div class="textBlock">
-<p>The Kolonist is a multiplayer browser-based strategy game in which players compete to control the biggest part of the world map. See <a href="<?php echo url::site('info/rules') ?>">Rules</a> and <a href="<?php echo url::site('info/screens') ?>">Screens</a> for more information.</p>
+<p><b>The Kolonist</b> is a multiplayer browser - based strategy game in which players compete to control the biggest part of the world map. See the <a href="<?php echo url::site('info/rules') ?>">Rules</a> and <a href="<?php echo url::site('info/screens') ?>">Screens</a> for more details.</p>
 </div>
