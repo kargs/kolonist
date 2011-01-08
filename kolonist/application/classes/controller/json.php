@@ -193,7 +193,7 @@ class Controller_Json extends Controller_Default {
 			}
 
 			if ($provinceInfo['army'] > $provinceInfo['province']->soldiers_count) {
-				return $this->error('Not enought soldiers in province.');
+				return $this->error('Not enough soldiers in province.');
 			}
 
 			$provincesInfo[] = $provinceInfo;
@@ -215,25 +215,50 @@ class Controller_Json extends Controller_Default {
 			$defense = 0;
 		}
 
-		// very little chance for absolute luck
+		// Buildings can add to the defense
+		$buildingsDefense = 0;
+		foreach ($provinceToAttack->buildings->find_all() as $building) {
+			if ($building) {
+				$buildingsDefense += $building->buildingstat->defense;
+			}
+		}
+
+		$buildingsDefense *= ($this->options->fightBuildingsDefense / 100);
+		if ($defense == 0) {
+			$fightInformation['buildingsDefenseRatio'] = 1;
+		}  else {
+			// The percentage of defense given by buildings to the defense of army
+			$fightInformation['buildingsDefenseRatio'] = $buildingsDefense / $defense;
+		}
+
+		$defense += $buildingsDefense;
+
+		// Very little chance for absolute luck
 		if (rand(0, abs($attack - $defense)) < $this->options->fightAbsoluteLuckLevel) {
 			// If the armies are equal, it's 100% that the fight depends on luck
 			// The stronger the difference, the less chance for solving fight by luck
 			// Luck can add or substract up to 100% of $defense value
-			$attack += rand(-$attack, $defense);
+			$luck = rand(-$attack, $defense);
+			$attack += $luck;
+			$fightInformation['luck'] = $luck / $attack;
+		} else {
+			$fightInformation['luck'] = 0;
 		}
 
 		if ($attack == $defense || $defense == 0) {
-			// Still equal? No way, defensor has real luck!
+			// Equal? Someone needs to win
 			$defense += 1;
 		} if ($attack == 0) {
-			// Can't be 0
+			// It's only possible if the attacker has 0 armament for every province
 			$attack +=1;
 		}
 
 		// Compute the gains and losses
 		$ratio = ($attack > $defense) ? ($attack / $defense) : ($defense / $attack);
 		if ($ratio > $this->options->fightRatioCap) $ratio = $this->options->fightRatioCap;
+
+		$fightInformation['attack'] = $attack;
+		$fightInformation['ratio'] = ($attack > $defense) ? $ratio : 1 / $ratio;
 
 		$looserLossPercentage = 50 + ($ratio / $this->options->fightRatioCap) * $this->options->fightMaxPercentLoss;
 		$looserLossRandomPercentage = $this->computeRandomLoss($ratio);
@@ -245,15 +270,17 @@ class Controller_Json extends Controller_Default {
 
 		if ($attack > $defense) {
 			// Attacker won
-			$result['won'] = true;
+			$fightInformation['won'] = true;
 
 			// Attacker loses few soldiers
-			$result['losts'] = $this->computeFightLosses($provincesInfo, $winnerLossDecimal);
-			$result['lostDecimal'] = $winnerLossDecimal;
+			$fightInformation['losts'] = $this->computeFightLosses($provincesInfo, $winnerLossDecimal);
+			$fightInformation['lostDecimal'] = $winnerLossDecimal;
 
 			// Victim loses many soldiers
-			$provinceToAttack->soldiers_count -= $looserLossDecimal * $provinceToAttack->soldiers_count;
+			$victimLosts = $looserLossDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->soldiers_count -= $victimLosts;
 			$provinceToAttack->armament_count -= $looserLossDecimal * $provinceToAttack->armament_count;
+			$fightInformation['victimLosts'] = $victimLosts;
 			if ($provinceToAttack->user_id != 0) {
 				Utils::addInfo($provinceToAttack->user, 'You lost province ' . $provinceToAttack->name . '!');
 			}
@@ -263,36 +290,24 @@ class Controller_Json extends Controller_Default {
 			$provinceToAttack->save();
 		} else {
 			// Attacker lost
-			$result['won'] = false;
+			$fightInformation['won'] = false;
 
 			// Attacker loose many soldiers
-			$result['losts'] = $this->computeFightLosses($provincesInfo, $looserLossDecimal);
-			$result['lostDecimal'] = $looserLossDecimal;
+			$fightInformation['losts'] = $this->computeFightLosses($provincesInfo, $looserLossDecimal);
+			$fightInformation['lostDecimal'] = $looserLossDecimal;
 
 			// Victim loses few soldiers
-			$provinceToAttack->soldiers_count -= $winnerLossDecimal * $provinceToAttack->soldiers_count;
+			$victimLosts =  $winnerLossDecimal * $provinceToAttack->soldiers_count;
+			$provinceToAttack->soldiers_count -= $victimLosts;
 			$provinceToAttack->armament_count -= $winnerLossDecimal * $provinceToAttack->armament_count;
+			$fightInformation['victimLosts'] = $victimLosts;
 			$provinceToAttack->save();
 			if ($provinceToAttack->user_id != NULL) {
-				Utils::addInfo($provinceToAttack->user, 'Your province was ' . $provinceToAttack->name . 'was attacked but it survived.');
+				Utils::addInfo($provinceToAttack->user, 'Your province ' . $provinceToAttack->name . 'was attacked but it survived.');
 			}
 		}
 
-		$this->view = $result;
-	}
-
-	/**
-	 * 
-	 */
-	public function action_getrequirementsforcreate($province_id) {
-
-	}
-
-	/**
-	 *
-	 */
-	public function action_checkrequirementsforupgrade($province_id, $slot_index) {
-
+		$this->view = $fightInformation;
 	}
 
 	/**
