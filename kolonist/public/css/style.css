@@ -43,6 +43,7 @@ body
 .footer
 {
     margin-top: 20px;
+    padding-top: 20px;
     font-size: 0.8em;
     height: 100px;
     background: #9BBFC7;
@@ -155,4 +156,17 @@ div.mainContent div.fieldbundle input {
 .textDiv{
     text-align: center;
     font-weight: bold;
+}
+
+
+form div.error {
+    text-align: right;
+    color: red;
+    font-style: italic;
+}
+
+div.textBlock {
+    font-size: 0.7em;
+    font-weight: normal;
+    text-align: justify;
 }
