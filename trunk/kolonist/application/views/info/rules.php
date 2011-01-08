@@ -1,10 +1,11 @@
 <div class="textDiv">Rules</div>
 
 <div class="textBlock">
-<p>The Kolonist is a multiplayer browser-based strategy game in which many players compete to control the biggest part of the map.</p>
-<p>The world map of the game is divided into 175 provinces. New player is assigned to one province with little resources at the start.
- Each province has 5 slots for buildings. There are 9 types of buildings, like townhall, bakery, barracks and more. Each building
- produces some amounts of resources and requires some of these in order to be built. The player has to manage his or her provinces
- in a way which ensures good defense (in order to protect agains other players' army) and good attack (in order to take over other
- provinces).</p>
+<p>The main goal of the game is to take over as many provinces as possible. Players strive to achieve that by creating an army to attack other provinces as well as to defend their own parts of the world. In order to produce the strongest army player has to manage production and consumption of resources (like food, iron or wood) in an optimal way by creating the right buildings in a right time. Many factors have to be taken into account.</p>
+<ul>
+	<li><a href="<?php echo url::site('info/provinces') ?>">Provinces</a></li>
+	<li><a href="<?php echo url::site('info/buildings') ?>">Buildings</a></li>
+	<li><a href="<?php echo url::site('info/resources') ?>">Resources</a></li>
+	<li><a href="<?php echo url::site('info/battles') ?>">Battles</a></li>
+</ul>
 </div>

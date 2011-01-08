@@ -1,0 +1,6 @@
+<div class="textDiv"><a href="<?php echo url::site('info/rules') ?>">Rules</a> &raquo; Buildings</div>
+
+<div class="textBlock">
+<p>There are nine types of buildings in the game: townhall, homestead, bakery, forge, steelworks, storehouse, barracks, brickyard and sawmill. Creating or upgrading any building cost some resources. Buildings improve your province's storage capacity of various resources.  And of course, buildings produce things. Some of them produce food, other create armament and so on. Some buildings also consume resources. For example, barracks train soldiers, so they "consume" settlers and "produce" soldiers. You can upgrade buildings in order to get better efficiency. You have only five building slots per province. Your role is to manage the production in a way which will allow you to attack and to defend against enemies.</p>
+<p>Please note that you can assign some amount of workers to any building. If you assign the maximum amount of workers, building produces 100% of it's capabilities. Otherwise it produces less. Workers consume much more than settlers.</p>
+</div>
