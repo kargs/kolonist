@@ -321,7 +321,7 @@ class Controller_Json extends Controller_Default {
 		$this->view['name'] = $province->name;
 		$this->view['slots'] = array();
 
-		$maxes = $this->resourcesTemplateArray;
+		$maxes = $gains = $this->resourcesTemplateArray;
 
 		foreach($province->buildings->find_all() as $building) {
 			if ($building) {
@@ -329,9 +329,11 @@ class Controller_Json extends Controller_Default {
 				$jsonSlot['building']['type'] = $building->buildingstat->type;
 				$jsonSlot['building']['level'] = $building->level;
 				$jsonSlot['building']['workers'] = $building->workers_assigned;
+				$jsonSlot['building']['stopped'] = $building->stopped;
 
 				foreach ($this->resourcesNames as $resource) {
 					$maxes[$resource] += $building->buildingstat->{$resource . '_max'};
+					$gains[$resource] += $building->buildingstat->{$resource . '_gain'};
 				}
 			} else {
 				$jsonSlot['building'] = null;
@@ -348,6 +350,7 @@ class Controller_Json extends Controller_Default {
 		$this->view['resources']['brick'] = $province->brick_count;
 
 		$this->view['maxes'] = $maxes;
+		$this->view['gains'] = $gains;
 	}
 
 	/**

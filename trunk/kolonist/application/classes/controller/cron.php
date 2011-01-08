@@ -41,15 +41,48 @@ class Controller_Cron extends Controller_Default {
 			$counts[$resource] = $province->{$resource . '_count'};
 		}
 
+		// Feed the settlers
+		if ($province->user_id != NULL) {
+			$foodEatenBySettlers = $counts['settlers'] * $this->options->foodBySettler;
+			if ($counts['food'] < $foodEatenBySettlers) {
+				// Not enough food, some settlers eat, some go away
+				$settlersThatEat = (int)($counts['food'] / $this->options->foodBySettler);
+				$settlersThatGo = $counts['settlers'] - $settlersThatEat;
+				$counts['food'] = 0;
+				$counts['settlers'] -= $settlersThatGo;
+				Utils::addInfo($province->user, 'Province ' . $province->name . ' lost ' . $settlersThatGo . ' settlers because they had nothing to eat!');
+				$this->debug('Nothing to eat on province ' . $province->id . ', ' . $settlersThatGo . ' settlers gone.');
+			} else {
+				$counts['food'] -= $foodEatenBySettlers;
+			}
+		}
+
 		foreach ($province->buildings->find_all() as $building) {
 			if (!$building) {
 				continue;
 			}
 
+			// NOTE: There never should be any buildings on unowned (fresh) province, otherwise this code will crash
+
 			$this->debug('Found building ' . $building->id);
 			$buildingstat = $building->buildingstat;
 			$changes = $this->resourcesTemplateArray;
 			$somethingLacking = FALSE;
+
+			// Feed workers
+			$foodEatenByWorkers = $building->workers_assigned * $buildingstat->food_by_worker;
+			if ($counts['food'] < $foodEatenByWorkers) {
+				// Not enough food, building stops
+				$building->stopped = TRUE;
+				$building->save();
+				if ($province->user_id != NULL) {
+					Utils::addInfo($province->user, 'Building ' . $buildingstat->type . ' on province ' . $province->name . ' stopped working because the workers had nothing to eat!');
+				}
+				$this->debug('Workers can eat on province ' . $province->id . ', building ' . $building->id . ' stopped.');
+				continue;
+			} else {
+				$counts['food'] -= $foodEatenByWorkers;
+			}
 
 			foreach ($this->resourcesNames as $resource) {
 				$change = $buildingstat->{$resource . '_gain'} * ((float)$building->workers_assigned / $buildingstat->workers_max);
