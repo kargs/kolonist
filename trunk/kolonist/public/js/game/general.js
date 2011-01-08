@@ -107,6 +107,12 @@ function isError(data) {
     return false;
 }
 
+function isArray(obj) {
+   if (obj.constructor.toString().indexOf("Array") == -1)
+      return false;
+   else
+      return true;
+}
 
 function dump(v) {
     var r = 'Dump:\n';

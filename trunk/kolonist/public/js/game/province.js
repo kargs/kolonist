@@ -172,9 +172,10 @@ function updateProvince(id) {
                     balls[balls.length] = {
                         css: 'bgtoggle develop',
                         title: 'Upgrade to '+(1 + parseInt(b.level)),
-                        params: [p.id, b.slot_index],
+                        params: [p.id, b.slot_index, b, p.resources],
                         click: function (e, params) {
-                            upgradeBuilding(params[0], params[1]);
+                            showBuildingUpgrader(params[0], params[2], params[3]);
+//                            upgradeBuilding(params[0], params[1]);
                         }
                     }
                     balls[balls.length] = {
@@ -202,18 +203,24 @@ function updateProvince(id) {
             for(var i=0; i < slotMax; i++) {
                 var balls = new Array();
                 var img = 'graphics/slot.png';
+                var click = null;
+                var params = null;
                 if(slots[i] == null) {  // domyślne budynki
-                    for (var bname in buildings) {
-                        // sprawdzać ilość resourców
-                        balls[balls.length] = {
-                            css: 'bgtoggle develop',
-                            title: 'Build '+bname,
-                            params: [p.id, i, bname],
-                            click: function (e, params) {
-                                createBuilding(params[0], params[1], params[2]);
-                            }
-                        }
+                    click = function(event, param) {
+                        showBuildingChooser(id, param);
                     }
+                    params = {resources: p.resources, slotIndex: i};
+//                    for (var bname in buildings) {
+//                        // sprawdzać ilość resourców
+//                        balls[balls.length] = {
+//                            css: 'bgtoggle develop',
+//                            title: 'Build '+bname,
+//                            params: [p.id, i, bname],
+//                            click: function (e, params) {
+//                                createBuilding(params[0], params[1], params[2]);
+//                            }
+//                        }
+//                    }
                 } else {
                     balls = slots[i].balls;
                     img = slots[i].img;
@@ -221,6 +228,8 @@ function updateProvince(id) {
                 buildBallMenu($('#slot'+i), {
                     img: img,
                     css: 'test',
+                    click: click,
+                    params: params,
                     style: 'color:orange'
                 }, balls);
             }

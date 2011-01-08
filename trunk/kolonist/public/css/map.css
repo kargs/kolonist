@@ -8,13 +8,17 @@ div#wrapper {
     width: 100%;
     height: 100%;
 }
-
+br.clear {
+    clear: both;
+    font-size: 0px;
+    line-height: 0px;
+}
 /*-- TOP --*/
 #top {
     position: absolute;
     width: 100%;
     z-index: 999;
-/*    overflow: hidden;*/
+    /*    overflow: hidden;*/
 }
 #top .top_content {
     height: 100%;
@@ -24,7 +28,7 @@ div#wrapper {
     height: 40px;
 }
 #top .logo {
-/*    position: absolute;*/
+    /*    position: absolute;*/
     position: relative;
     float: left;
     background-image: url(../graph/topbg2.png);
@@ -123,8 +127,8 @@ div#provinceView div.provinceDetail {
     height: 100%;
 }
 div#provinceView .resourcesbar {
-   height: 30px;
-/*   background: url("../graph/topbg.png") bottom repeat-x;*/
+    height: 30px;
+    /*   background: url("../graph/topbg.png") bottom repeat-x;*/
 }
 div#provinceView .resourcesbar > div {
     float: left;
@@ -140,7 +144,7 @@ div#provinceView .resourcesbar div.value {
     font-weight: bold;
     border-right: 1px solid #635b2c;
     padding-right: 3px;
-    
+
 }
 
 /*-- koniec Widok prowincji --*/
@@ -173,7 +177,7 @@ div#mapMenuBall {
 /*-- ball menu przy widoku prowincji --*/
 div.slot {
     position: absolute;
-/*    background: url(../graphics/slot.png);*/
+    /*    background: url(../graphics/slot.png);*/
 }
 div#slot0 {
     left: 300px;
@@ -241,7 +245,7 @@ fieldset.battle div.content div.scroll {
     float: right;
 }
 #enemyDialog fieldset table td div.sliderInfo input.current {
-/*    float: left;*/
+    /*    float: left;*/
     margin-left: 50px;
     width: 50px;
 }
@@ -286,6 +290,164 @@ fieldset.battle div.content div.scroll {
 #battleResultDialog .lost div {
     color: red;
 }
+
+
+/*-- Building Chooser ---*/
+#buildingChooser .buildItem {
+    border-bottom: #111 4px solid;
+    padding-top: 12px;
+    position: relative;
+}
+.buildingCart .left {
+    float: left;
+    border: #1f1f1f 1px solid;
+    background-color: #FFE69C;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.buildingCart .info{
+    margin-left: 160px;
+}
+
+.buildingCart .type {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+}
+.buildingCart .levelWrapper {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+.buildingCart .levelWrapper .level {
+    font-weight: bold;
+    font-size: 14px;
+}
+.buildingCart .avatar img {
+    max-width: 120px;
+    max-height: 120px;
+}
+.buildingCart .buildActionButton {
+    float: right;
+}
+#buildingChooser .buildItem .more {
+    float: right;
+    margin-top: -20px;
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+#buildingChooser .buildItem .extendInfo {
+    display: none;
+    border: black 1px solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background-color: #D9CBA0;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+#buildingChooser .buildItem .extendInfo .extTable {
+    height: 200px;
+    width: 155px;
+    float: left;
+    border-right: black 1px solid;
+    border-left: black 1px solid;
+}
+
+#buildingChooser .buildItem .extendInfo .extGain{
+    border-left: none;
+}
+
+#buildingChooser .buildItem .extendInfo .extOther{
+    border-right: none;
+}
+
+#buildingChooser .noRes {
+    opacity: 0.6;
+}
+.buildingCart .noRes .buildActionButton,
+.buildingCart .maxLevel .buildActionButton {
+    display: none;
+}
+
+
+/*-- Building Updater ---*/
+#buildingUpgrader .upgrateUnable {
+    display: none;
+    text-align: center;
+    color: white;
+    border: red 1px solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background: #c40000;
+    float: right;
+    width: 140px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px;
+}
+#buildingUpgrader .noRes .upgrateUnable {
+    display: block;
+}
+#buildingUpgrader .comparerWrapper {
+    border: black 1px solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background-color: #D9CBA0;
+    padding: 5px;
+    margin-top: 20px;
+}
+#buildingUpgrader .comparer > div {
+    float: left;
+    height: 200px;
+    width: 155px;
+    border-right: black 1px solid;
+    border-left: black 1px solid;
+}
+#buildingUpgrader .comparer .cmpGain {
+    border-left: none;
+}
+#buildingUpgrader .comparer .cmpOther {
+    border-right: none;
+}
+
+.requTable {
+    border-collapse: collapse;
+}
+.requTable td {
+    padding-right: 5px;
+}
+.requTable .requName,
+.requTable .requValue,
+.requTable .requLack div {
+    border-bottom: 1px solid silver;
+}
+.requTable .requLack div {
+    position: relative;
+    top: 1px;
+    left: -1px;
+}
+.requTable .requName {
+    padding-left: 10px;
+}
+.requTable .requValue {
+    padding-right: 10px;
+}
+.requTable .requLack div {
+    color: #c40000;
+}
+
+
+
 
 /*Nadpisanie JQuery UI*/
 body div.ui-widget-overlay {
