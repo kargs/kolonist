@@ -38,6 +38,34 @@ translator['workers_max'] = 'Workers';
 translator['defense'] = 'Defense';
 translator['food_by_worker'] = 'Food by worker';
 
+translator['free'] = 'No-man\'s land';
+translator['armyMove'] = 'Move army to another province';
+translator['changeProvinceNameTitle'] = 'Change province name';
+translator['buildingChooser'] = 'Choose a building to create';
+translator['anyRequirements'] = 'This building has no requirements.';
+translator['lacks'] = 'lacks';
+translator['level'] = 'lvl';
+translator['buildingUpgrader'] = 'Upgrade the building';
+translator['1'] = '1';
+translator['2'] = '2';
+translator['3'] = '3';
+translator['4'] = '4';
+translator['msgDlgTitle'] = 'Most recent messages';
+translator['msgType'] = 'Type';
+translator['msgContent'] = 'Message';
+translator['msgDate'] = 'Date';
+translator['storage'] = 'Surplus';
+translator['resources'] = 'Shortage';
+translator['fight-win'] = 'Victory';
+translator['fight-loose'] = 'Defeat';
+translator['settlers-eat'] = 'Starvation';
+translator['workers-eat'] = 'Starvation';
+
+
+
+
+
+
 function translate(id) {
     if(translator[id] === undefined) {
         return 'XXX_'+id;
