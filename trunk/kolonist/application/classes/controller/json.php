@@ -424,6 +424,28 @@ class Controller_Json extends Controller_Default {
 		}
 	}
 
+	public function action_movesoldiers($province_from_id, $province_to_id, $amount) {
+		if (($provinceFrom = $this->getAndCheckProvince($province_from_id)) === FALSE) {
+			return FALSE;
+		}
+
+		if (($provinceTo = $this->getAndCheckProvince($province_to_id)) === FALSE) {
+			return FALSE;
+		}
+
+		if ($provinceFrom->soldiers_count < $amount) {
+			return $this->error('Not enough soldiers in the source province.');
+		}
+
+		$provinceFrom->soldiers_count -= $amount;
+		$provinceTo->soldiers_count += $amount;
+
+		$provinceFrom->save();
+		$provinceTo->save();
+
+		return $this->success('Soldiers moved.');
+	}
+
 	protected function isUserOwnerOfProvince($province) {
 		return $province->user->id === $this->user->id;
 	}
