@@ -34,7 +34,7 @@ $(function() {
 });
 
 function processGameState() {
-    $.get(ajaxProxy+'json/cycle', {}, function(data) {
+    $.get(ajaxProxy+'json/cycle2', {}, function(data) {
         var r = null;
         if((r = parseJSON(data)) === undefined) {
             return;
@@ -54,8 +54,8 @@ function processGameState() {
         // komunikaty
 
         if(!(r.content.infos === undefined) && r.content.infos.length > 0) {
-            renderMessage(r.content.infos);
-            html = $('div#messageDlg').html(html);
+            html = renderMessage(r.content.infos);
+            $('div#messageDlg').html(html);
             $('div#messageDlg').dialog('open');
         }
     });
@@ -72,4 +72,5 @@ function renderMessage(msgs) {
         html += '<td class="content">'+msg+'</td><td class="date">'+date+'</td>';
     });
     html += '</tbody></html>';
+    return html;
 }
