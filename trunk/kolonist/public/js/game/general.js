@@ -1,5 +1,5 @@
 var ajaxProxy = 'proxy.php?url=';
-ajaxProxy = '';
+//ajaxProxy = '';
 var slotMax = 5;
 var userId = 4;
 var userName = '';

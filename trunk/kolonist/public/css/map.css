@@ -182,22 +182,99 @@ div#provinceView div.provinceDetail {
 }
 div#provinceView .resourcesbar {
     height: 30px;
-    /*   background: url("../graph/topbg.png") bottom repeat-x;*/
-}
-div#provinceView .resourcesbar > div {
-    float: left;
-    margin-right: 5px;
-}
-div#provinceView .resourcesbar {
-    font-size: 15px;
+    font-size: 12px;
     color: #454545;
     padding-top: 5px;
     padding-left: 10px;
+}
+div#provinceView .resourcesbar div.resItem {
+    float: left;
+    margin-right: 5px;
+    position: relative;
+    cursor: default;
+}
+div#provinceView .resourcesbar div.resItem > div {
+    float: left;
+}
+div#provinceView .resourcesbar div.resItem .icon img {
+    max-width: 25px;
+    max-height: 25px;
 }
 div#provinceView .resourcesbar div.value {
     font-weight: bold;
     border-right: 1px solid #635b2c;
     padding-right: 3px;
+    padding-top: 5px;
+
+}
+div#provinceView .resourcesbar div.resItem .name {
+    display: none;
+    position: absolute;
+    top: 40px;
+}
+/*div#provinceView .resourcesbar div.resItem:hover .name {
+    display: block;
+}*/
+.resToolpit {
+    color: white;
+    background: lime;
+}
+
+/*--Action menu--*/
+div#provinceView .resourcesbar .actionMenu {
+    float: right;
+    top: 4px;
+}
+div#provinceView .resourcesbar .actionMenu .items {
+    right: -1px;
+    width: 100px;
+    text-align: right;
+}
+div#provinceView .resourcesbar .actionMenu .items .icon-adv {
+    float: right;
+}
+.actionMenu {
+    position: relative;
+}
+.actionMenu .icon {
+    display: block;
+}
+.actionMenu .icon span.ui-icon {
+    display: inline-block;
+}
+.actionMenu .items {
+    display: none;
+    position: absolute;
+    z-index: 999;
+    background: gray;
+    border: 1px white solid;
+    top: -1px;
+}
+.actionMenu:hover .items {
+    display: block;
+}
+.actionMenu:hover .icon {
+    display: none;
+}
+.actionMenu:hover .items .icon-adv {
+    display: block;
+}
+.actionMenu .items ul,
+.actionMenu .items ul li {
+    margin: 0px;
+    padding: 0px;
+}
+.actionMenu .items ul li {
+    padding: 5px;
+    display: block;
+    border-bottom: 1px #FFE69C solid;
+}
+.actionMenu .items ul li a {
+    display: block;
+    text-decoration: none;
+}
+.actionMenu .items ul li:hover {
+    background: silver;
 
 }
 

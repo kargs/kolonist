@@ -3,7 +3,7 @@ $(function() {
 
     function cycle() {
         processGameState();
-    //        setTimeout(cycle, 30000);
+//    //        setTimeout(cycle, 30000);
     }
 
     $('.showMsgBtn').live('click', function(event) {

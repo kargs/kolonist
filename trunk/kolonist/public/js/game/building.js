@@ -26,12 +26,16 @@ $(function() {
         }
     });
 
+
     $('div#buildingView').dialog({
         autoOpen: false,
-        resizable: false,
+        //        resizable: false,
         modal: true,
-        width: 430,
-        height: 430
+        height: 500,
+        width: 530,
+        open: function() {
+            $('button', this).button();
+        }
     });
 
     $('div#buildingChooser').dialog({
@@ -102,6 +106,7 @@ function _isBuildAble(building, resources) {
     }
     return true;
 }
+
 
 function showBuildingUpgrader(provinceId, building, resources) {
     var b0 = buildings[building.type][building.level];
@@ -264,35 +269,133 @@ function showBuildingChooser(provinceId, params) {
 }
 
 function showBuilding(province_id, building) {
-    $('div#buildingView div.buildingDetail').css('display', 'none');
-    var $bv = $('div#buildingView div.buildingDetail');
-    $bv.css('display', 'block');
-    $('.workers', $bv).html(building.workers);
-    $('.increaseWorkers', $bv).click(function(event) {
-        event.preventDefault();
-        var workersCnt = parseInt(building.workers) + 1;
-        $.get('json/attachworkers/'+province_id+'/'+building.slot_index+'/'+workersCnt, function(data) {
-            var r = null;
-            if((r = parseJSON(data)) === undefined) {
-                return;
-            }
-            building.workers = workersCnt;
-            $('.workers', $bv).html(workersCnt);
-        });
-    });
-    
-    $('.decreaseWorkers', $bv).click(function(event) {
-        event.preventDefault();
-        var workersCnt = parseInt(building.workers) - 1;
-        $.get('json/attachworkers/'+province_id+'/'+building.slot_index+'/'+workersCnt, function(data) {
-            var r = null;
-            if((r = parseJSON(data)) === undefined) {
-                return;
-            }
-            building.workers = workersCnt;
-            $('.workers', $bv).html(workersCnt);
-        });
-    });
 
+    var b0 = buildings[building.type][building.level];
+    var b1 = buildings[building.type][parseInt(building.level)+1];
+    var isMaxLevel = false;
+    if(b1 === undefined) {
+        isMaxLevel = true;
+    }
+    var bable = _isBuildAble(b1, resources);
+    var isUpgradeAble = !isArray(bable);
+    var $dlg = $('div#buildingView');
+    if(isUpgradeAble) {
+        $('.upgrader', $dlg).removeClass('noRes');
+    } else {
+        $('.upgrader', $dlg).addClass('noRes');
+    }
+    $('.type', $dlg).html(translate(b0.type));
+    $('.level', $dlg).html(translate(b0.level));
+    $('.avatar img', $dlg).attr('src', '/graph/buildings/'+b0.type+'.png');
+    var html = '';
+    if(isMaxLevel) {
+        $('.upgrader', $dlg).addClass('maxLevel');
+        html += translate('buildingMaxLevelAchieved');
+    } else {
+        html = '<table class="reqTable">';
+        var emptyRequ = true;
+        for(var ri in b1) {
+            if(ri.indexOf('_requirement') >= 0 && b1[ri] > 0) {
+                emptyRequ = false;
+                html += '<tr><td class="requName">'+translate(ri)+'</td><td class="requValue">'+b1[ri]+'</td><td class="requLack">';
+                var propname = ri.replace('_requirement', '');
+                if(!(bable[propname] === undefined)) {
+                    html += '<div>('+bable[propname]+' '+translate('lacks')+')</div>';
+                }
+                html += '</td></tr>';
+            }
+        }
+        if(emptyRequ) {
+            html += '<tr><td>'+translate('anyRequirements')+'</td></tr>';
+        }
+        html += '</table>';
+    }
+    $('.requItems', $dlg).html(html);
+
+    // comparer
+    html = '<div class="cmpGain"><table><thead><tr><td>'+translate('buildingChooser_gain')+'</td><td>'+translate('level')+'&nbsp;'+b0.level+'</td>';
+    if(!isMaxLevel) {
+        html += '<td>'+translate('level')+'&nbsp;'+b1.level+'</td>';
+    }
+    html += '</tr></thead><tbody>';
+    for(var gi in b0) {
+        if(gi.indexOf('_gain') >= 0) {
+            html += '<tr><td>'+translate(gi)+'</td><td>'+b0[gi]+'</td>';
+            if(!isMaxLevel) {
+                html += '<td>'+b1[gi]+'</td>';
+            }
+            html += '</tr>';
+        }
+    }
+    html += '</tbody></table></div>';
+
+    html += '<div class="cmpMax"><table><thead><tr><td>'+translate('buildingChooser_capacity')+'</td><td>'+translate('level')+'&nbsp;'+b0.level+'</td>';
+    if(!isMaxLevel) {
+        html += '<td>'+translate('level')+'&nbsp;'+b1.level+'</td>';
+    }
+    html += '</tr></thead><tbody>';
+    for(var gi in b0) {
+        if(gi.indexOf('_max') >= 0) {
+            html += '<tr><td>'+translate(gi)+'</td><td>'+b0[gi]+'</td>';
+            if(!isMaxLevel) {
+                html += '<td>'+b1[gi]+'</td>';
+            }
+            html += '</tr>';
+        }
+    }
+    html += '</tbody></table></div>';
+
+    html += '<div class="cmpOther"><table><thead><tr><td>'+translate('buildingChooser_other')+'</td><td>'+translate('level')+'&nbsp;'+b0.level+'</td>';
+    if(!isMaxLevel) {
+        html += '<td>'+translate('level')+'&nbsp;'+b1.level+'</td>';
+    }
+    html += '</tr></thead><tbody>';
+    html += '<tr><td>'+translate('defense')+'</td><td>'+b0.defense+'</td>';
+    if(!isMaxLevel) {
+        html += '<td>'+b1.defense+'</td>';
+    }
+    html += '</tr>';
+    html += '<tr><td>'+translate('food_by_worker')+'</td><td>'+b0.food_by_worker+'</td>';
+    if(!isMaxLevel) {
+        html += '<td>'+b1.food_by_worker+'</td>';
+    }
+    html += '</tr>';
+
+
+    html += '</tbody></table></div>';
+
+    $('.comparer', $dlg).html(html);
     $('div#buildingView').dialog('open');
+
+//    $('div#buildingView div.buildingDetail').css('display', 'none');
+//    var $bv = $('div#buildingView div.buildingDetail');
+//    $bv.css('display', 'block');
+//    $('.workers', $bv).html(building.workers);
+//    $('.increaseWorkers', $bv).click(function(event) {
+//        event.preventDefault();
+//        var workersCnt = parseInt(building.workers) + 1;
+//        $.get('json/attachworkers/'+province_id+'/'+building.slot_index+'/'+workersCnt, function(data) {
+//            var r = null;
+//            if((r = parseJSON(data)) === undefined) {
+//                return;
+//            }
+//            building.workers = workersCnt;
+//            $('.workers', $bv).html(workersCnt);
+//        });
+//    });
+//
+//    $('.decreaseWorkers', $bv).click(function(event) {
+//        event.preventDefault();
+//        var workersCnt = parseInt(building.workers) - 1;
+//        $.get('json/attachworkers/'+province_id+'/'+building.slot_index+'/'+workersCnt, function(data) {
+//            var r = null;
+//            if((r = parseJSON(data)) === undefined) {
+//                return;
+//            }
+//            building.workers = workersCnt;
+//            $('.workers', $bv).html(workersCnt);
+//        });
+//    });
+//
+//    $('div#buildingView').dialog('open');
 }
