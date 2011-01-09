@@ -384,18 +384,18 @@ class Controller_Json extends Controller_Default {
 			$this->view['provinces'][] = $jsonProvince;
 		}
 
-//		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->where('seen', '=', 0)->find_all();
-//
-//		foreach ($infos as $info) {
-//			$jsonInfo['message'] = $info->message;
-//			$jsonInfo['date'] = date('Y-m-d H:i:s',  $info->date);
-//
-//			$this->view['infos'][] = $jsonInfo;
-//
-//			// TODO: Delete after seen?
-//			$info->seen = TRUE;
-//			$info->save();
-//		}
+		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->where('seen', '=', 0)->find_all();
+
+		foreach ($infos as $info) {
+			$jsonInfo['message'] = $info->message;
+			$jsonInfo['date'] = date('Y-m-d H:i:s',  $info->date);
+
+			$this->view['infos'][] = $jsonInfo;
+
+			// TODO: Delete after seen?
+			$info->seen = TRUE;
+			$info->save();
+		}
 	}
 
 	public function action_cycle2() {
@@ -454,6 +454,17 @@ class Controller_Json extends Controller_Default {
 		$provinceTo->save();
 
 		return $this->success('Soldiers moved.');
+	}
+
+	public function action_changeprovincename($province_id, $newname) {
+		if (($province = $this->getAndCheckProvince($province_id)) === FALSE) {
+			return FALSE;
+		}
+
+		$province->name = $newname;
+		$province->save();
+
+		return $this->success('Name changed.');
 	}
 
 	protected function isUserOwnerOfProvince($province) {
