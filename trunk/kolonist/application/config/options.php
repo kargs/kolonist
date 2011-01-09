@@ -3,7 +3,7 @@
 return array (
 	'cronInterval' => 60, // 60, Seconds to run cron
 	'foodSettlerInterval' => 3600, // 3600, Seconds for settlers to eat food
-	'foodBySettler' => 0.001, // 0.001, How many food one settler eats every foodSettlerInterval
+	'foodBySettler' => 0.05, // 0.05, How many food one settler eats every foodSettlerInterval
 	'fightAbsoluteLuckLevel' => 10, // 10, Maximum attack / defense ratio for giving chance to win by luck
 	'fightRatioCap' => 100, // 100, Maximum attack / defense ratio after which one can't loose more troops
 	'fightMaxPercentLoss' => 30, // 30, Maximum percentage of troops one can loose when the ratio is maximal (50% is added to this value)
