@@ -384,7 +384,7 @@ class Controller_Json extends Controller_Default {
 			$this->view['provinces'][] = $jsonProvince;
 		}
 
-		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->where('seen', '=', 0)->find_all();
+		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->where('seen', '=', 0)->limit(20)->find_all();
 
 		foreach ($infos as $info) {
 			$jsonInfo['message'] = $info->message;
@@ -392,8 +392,22 @@ class Controller_Json extends Controller_Default {
 
 			$this->view['infos'][] = $jsonInfo;
 
-			// TODO: Delete after seen?
-			$info->seen = TRUE;
+			$info->seen = 1;
+			$info->save();
+		}
+	}
+
+	public function action_messages() {
+		$infos = ORM::factory('info')->where('user_id', '=', $this->user->id)->limit(100)->find_all();
+
+		foreach ($infos as $info) {
+			$jsonInfo['message'] = $info->message;
+			$jsonInfo['date'] = date('Y-m-d H:i:s',  $info->date);
+			$jsonInfo['isNew'] = $info->seen;
+
+			$this->view['infos'][] = $jsonInfo;
+
+			$info->seen = 1;
 			$info->save();
 		}
 	}
