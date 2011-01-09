@@ -60,7 +60,7 @@ translator['fight-win'] = 'Victory';
 translator['fight-loose'] = 'Defeat';
 translator['settlers-eat'] = 'Starvation';
 translator['workers-eat'] = 'Starvation';
-
+translator['noMessages'] = 'No messages are available';
 
 
 

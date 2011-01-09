@@ -68,7 +68,24 @@ function renderMessage(msgs) {
         var tend = msg.indexOf(']');
         var type = msg.substr(1, tend-1);
         msg = msg.substr(tend+1, msg.length);
-        html += '<tr class="msg_'+type+'"><td class="type"><img src="" alt=""/>'+translate(type)+'</td>';
+
+		var img = 'graph/buildings/settlers.png';
+		switch(type) {
+			case 'fight-win':
+				img = 'graph/win.png';
+				break;
+			case 'fight-loose':
+				img = 'graph/lost.png';
+				break;
+			case 'storage':
+				img = 'graph/buildings/storehouse.png';
+				break;
+			case 'resources':
+				img = 'graph/buildings/wood.png';
+				break;
+		}
+
+        html += '<tr class="msg_'+type+'"><td class="type"><img src="' + img + '" alt="" width="64" />'+translate(type)+'</td>';
         html += '<td class="content">'+msg+'</td><td class="date">'+date+'</td>';
     });
     html += '</tbody></html>';
