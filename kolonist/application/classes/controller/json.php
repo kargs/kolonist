@@ -388,7 +388,7 @@ class Controller_Json extends Controller_Default {
 //
 //		foreach ($infos as $info) {
 //			$jsonInfo['message'] = $info->message;
-//			$jsonInfo['date'] = $info->date;
+//			$jsonInfo['date'] = date('Y-m-d H:i:s',  $info->date);
 //
 //			$this->view['infos'][] = $jsonInfo;
 //
@@ -428,7 +428,7 @@ class Controller_Json extends Controller_Default {
 		$n = 6;
 		for ($i = 0; $i < $n; ++$i) {
 			$jsonInfo['message'] = $messages[$i];
-			$jsonInfo['date'] = time() - ($n - $i) * 8600;
+			$jsonInfo['date'] = date('Y-m-d H:i:s',  time() - ($n - $i) * 8600);
 
 			$this->view['infos'][] = $jsonInfo;
 		}
