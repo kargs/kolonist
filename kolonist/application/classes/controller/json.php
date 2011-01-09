@@ -282,7 +282,7 @@ class Controller_Json extends Controller_Default {
 			$provinceToAttack->armament_count -= $looserLossDecimal * $provinceToAttack->armament_count;
 			$fightInformation['victimLosts'] = $victimLosts;
 			if ($provinceToAttack->user_id != 0) {
-				Utils::addInfo($provinceToAttack->user, 'You lost province ' . $provinceToAttack->name . '!');
+				Utils::addInfo($provinceToAttack->user, '[fight-loose] You lost province ' . $provinceToAttack->name . '!');
 			}
 
 			// Update province ownership
@@ -303,7 +303,7 @@ class Controller_Json extends Controller_Default {
 			$fightInformation['victimLosts'] = $victimLosts;
 			$provinceToAttack->save();
 			if ($provinceToAttack->user_id != NULL) {
-				Utils::addInfo($provinceToAttack->user, 'Your province ' . $provinceToAttack->name . 'was attacked but it survived.');
+				Utils::addInfo($provinceToAttack->user, '[fight-win] Your province ' . $provinceToAttack->name . 'was attacked but it survived!');
 			}
 		}
 
