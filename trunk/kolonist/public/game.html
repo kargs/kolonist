@@ -253,7 +253,7 @@
         <div id="battleResultDialog">
             <div class="won">
                 <img src="graph/win.png" alt="Win"/>
-                <div>You won the battle! Congratulations</div>
+                <div>You won the battle! Congratulations!</div>
             </div>
             <div class="lost">
                 <img src="graph/lost.png" alt="Win"/>
@@ -261,8 +261,20 @@
             </div>
             <br class="clear" />
             <div>
-                Your lost:&nbsp; <span class="yourLost"></span>%<br/>
-                Enemy lost: <span class="enemyLost"></span>%
+				<b>You</b>:<br/>
+                - lost <span class="yourLost"></span>% of soldiers<br/>
+                - which is <span class="soldiersLost"></span> soldiers in total<br/>
+				- your attack value was <span class="attack"></span><br/><br/>
+
+				<b>The Enemy</b>:<br/>
+				- lost <span class="enemySoldiersLost"></span> soldiers<br/>
+				- about <span class="buildingsDefenseRatio"></span>% of defense was caused by buildings<br/><br/>
+
+				<b>The Fight</b>:<br/>
+				- <span class="ratioInformation"></span><br/>
+				- <span class="luckInformation"></span><br/><br/>
+
+				<b>Details:</b><br/>
             </div>
             <div class="battleDetails">
                 <table>
