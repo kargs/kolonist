@@ -34,13 +34,13 @@ class Controller_User extends Controller_Default {
 
 				if ($province->id === NULL) {
 					// TODO: handle this error properly
-					throw new Exception('No more free provinces available.');
+					Request::instance()->redirect('info/nofreeprovinces');
 				}
 
 				$province->user = $this->user;
 				$province->save();
 
-				Request::instance()->redirect('welcome');
+				Request::instance()->redirect('user/index');
 			} else {
 				$this->view->errors = $_POST->errors('register');
 				$this->view->values = array_merge($_POST->as_array(), array('password' => '', 'password_confirm' => ''));
@@ -53,7 +53,7 @@ class Controller_User extends Controller_Default {
 			$user = ORM::factory('user');
 
 			if ($user->login($_POST)) {
-				Request::instance()->redirect('welcome');
+				Request::instance()->redirect('user/index');
 			} else {
 				$this->view->errors = $_POST->errors('login');
 				$this->view->values = array_merge($_POST->as_array(), array('password' => ''));
