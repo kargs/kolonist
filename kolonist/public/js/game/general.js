@@ -1,5 +1,5 @@
 var ajaxProxy = 'proxy.php?url=';
-ajaxProxy = '';
+//ajaxProxy = '';
 var slotMax = 5;
 var userId = 4;
 var userName = '';
@@ -72,10 +72,22 @@ function processError(code, message) {
     $('#errorDialog').html(message);
     $('#errorDialog').dialog({
         title: 'Error',
-        model: true,
+        modal: true,
         buttons: {
             "OK": function() {
                 $('#errorDialog').dialog('close');
+            }
+        }
+    });
+}
+function processInfo(code, message) {
+    $('#infoDialog').html(message);
+    $('#infoDialog').dialog({
+        title: 'Info',
+        modal: true,
+        buttons: {
+            "OK": function() {
+                $('#infoDialog').dialog('close');
             }
         }
     });

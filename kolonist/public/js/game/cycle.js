@@ -40,7 +40,7 @@ function processGameState() {
         setCurrentProgress('world');
         // komunikaty
 
-        if(r.content.infos.length > 0) {
+        if(!(r.content.infos === undefined) && r.content.infos.length > 0) {
             var html = '<table><thead><tr><td>'+translate('msgType')+'</td><td>'+translate('msgContent')+'</td><td>'+translate('msgDate')+'</td></tr></thead><tbody>';
             $.each(r.content.infos, function(i, item) {
                 var date = item.date;
