@@ -119,7 +119,7 @@ class Controller_Cron extends Controller_Default {
 						$change = $maxes[$resource] - $counts[$resource];
 						$this->debug('Max value achieved for ' . $resource);
 						if ($counts[$resource] != $maxes[$resource] && $province->user_id != NULL) {
-							Utils::addInfo($province->user, '[storage] Province ' . $province->name . ' cannot store more ' . $resource);
+//							Utils::addInfo($province->user, '[storage] Province ' . $province->name . ' cannot store more ' . $resource);
 						}
 					} else if ($counts[$resource] + $change < 0) {
 						if ($counts[$resource] != 0 && $province->user_id != NULL) {
