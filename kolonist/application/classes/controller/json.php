@@ -389,6 +389,7 @@ class Controller_Json extends Controller_Default {
 		foreach ($infos as $info) {
 			$jsonInfo['message'] = $info->message;
 			$jsonInfo['date'] = date('Y-m-d H:i:s',  $info->date);
+			$jsonInfo['isNew'] = $info->seen;
 
 			$this->view['infos'][] = $jsonInfo;
 
