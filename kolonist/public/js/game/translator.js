@@ -40,7 +40,7 @@ translator['food_by_worker'] = 'Food by worker';
 
 function translate(id) {
     if(translator[id] === undefined) {
-        return id;
+        return 'XXX_'+id;
     }
     return translator[id];
 }
