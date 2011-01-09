@@ -415,9 +415,19 @@ class Controller_Json extends Controller_Default {
 			$this->view['provinces'][] = $jsonProvince;
 		}
 
-		$n = 10;
+		
+		$messages = array(
+			'[fight-win] Your province X was attacked and you win!',
+			'[fight-loose] Your province X was attacked and you lost it.',
+			'[settlers-eat] Y settlers on province X had nothing to eat so they left!',
+			'[workers-eat] Some workers for building xxxx on province X had nothing to eat so the building stopped.',
+			'[storage] Storage capacity of xxxx on province X is full.',
+			'[resources] There is not enough xxxx for building yyyy on province X to work so it is stopped.',
+		);
+
+		$n = 6;
 		for ($i = 0; $i < $n; ++$i) {
-			$jsonInfo['message'] = 'This is a test message ' . $i;
+			$jsonInfo['message'] = $messages[$i];
 			$jsonInfo['date'] = time() - ($n - $i) * 8600;
 
 			$this->view['infos'][] = $jsonInfo;
