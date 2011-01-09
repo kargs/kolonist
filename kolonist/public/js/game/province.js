@@ -79,13 +79,23 @@ $(function() {
                 html += '</td></tr>';
             });
             $('table tbody', $battle).html(html);
-            alert(r.lostDecimal);
-            var enemyLost = Math.round(parseFloat(r.lostDecimal)*100);
-            var youLost = 100 - enemyLost;
-            //            $('#battleResultDialog .enemyLost').html(enemyLost);
-            //            $('#battleResultDialog .yourLost').html(youLost);
-            $('#battleResultDialog .enemyLost').html(youLost);
-            $('#battleResultDialog .yourLost').html(enemyLost);
+
+			var youLost = Math.round(parseFloat(r.lostDecimal)*100);
+            var soldiersLost = Math.round(parseFloat(r.soldiersLost));
+			var attack = Math.round(parseFloat(r.attack));
+			var enemySoldiersLost = Math.round(parseFloat(r.victimLosts));
+			var buildingsDefenseRatio = Math.round(parseFloat(r.buildingsDefenseRatio)*100);
+			var ratioInformation = r.ratioInformation;
+			var luckInformation = r.luckInformation;
+
+            $('#battleResultDialog .yourLost').html(youLost);
+			$('#battleResultDialog .soldiersLost').html(soldiersLost);
+			$('#battleResultDialog .attack').html(attack);
+			$('#battleResultDialog .enemySoldiersLost').html(enemySoldiersLost);
+			$('#battleResultDialog .buildingsDefenseRatio').html(buildingsDefenseRatio);
+			$('#battleResultDialog .ratioInformation').html(ratioInformation);
+			$('#battleResultDialog .luckInformation').html(luckInformation);
+
             $('#enemyDialog').dialog('close');
             $('#battleResultDialog').dialog('open');
         });

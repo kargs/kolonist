@@ -307,6 +307,49 @@ class Controller_Json extends Controller_Default {
 			}
 		}
 
+		// Some informational text generation
+		if ($fightInformation['luck'] > 0) {
+			$fightInformation['luckInformation'] = 'You got lucky and your attack was increased by ' . (int)($fightInformation['luck'] * 100) . '%!';
+		} else if ($fightInformation['luck'] < 0) {
+			$fightInformation['luckInformation'] = 'You had a bad luck and your attack was decreased by ' . (int)(-$fightInformation['luck'] * 100) . '%.';
+		} else {
+			$fightInformation['luckInformation'] = 'This fight was not influenced by luck.';
+		}
+
+		if ($fightInformation['ratio'] > 1) {
+			$stronger = 'Your army';
+			$weaker = 'the enemy';
+		} else {
+			$stronger = 'The enemy';
+			$weaker = 'your army';
+		}
+
+		if ($fightInformation['ratio'] > $this->options->fightRatioCap * 0.8) {
+			$howMuch = 'overwhelmingly';
+		} else if ($fightInformation['ratio'] > $this->options->fightRatioCap * 0.5) {
+			$howMuch = 'severely';
+		} else if ($fightInformation['ratio'] > $this->options->fightRatioCap * 0.2) {
+			$howMuch = 'substantially';
+		} else if ($fightInformation['ratio'] > 1) {
+			$howMuch = 'somewhat';
+		} else if (1 / $fightInformation['ratio'] > $this->options->fightRatioCap * 0.8) {
+			$howMuch = 'overwhelmingly';
+		} else if (1 / $fightInformation['ratio'] > $this->options->fightRatioCap * 0.5) {
+			$howMuch = 'severely';
+		} else if (1 / $fightInformation['ratio'] > $this->options->fightRatioCap * 0.2) {
+			$howMuch = 'substantially';
+		} else {
+			$howMuch = 'somewhat';
+		}
+
+		$fightInformation['ratioInformation'] = $stronger . ' was ' . $howMuch . ' stronger than ' . $weaker;
+
+		$totalLost = 0;
+		foreach ($fightInformation['losts'] as $lost) {
+			$totalLost += $lost['armylost'];
+		}
+		$fightInformation['soldiersLost'] = $totalLost;
+
 		$this->view = $fightInformation;
 	}
 
@@ -528,7 +571,7 @@ class Controller_Json extends Controller_Default {
 
 			$lost = array(
 				'provinceId' => $provinceInfo['province']->id,
-				'armylost' => (int) ($lostDecimal * $provinceInfo['army']),
+				'armylost' => round(($lostDecimal * $provinceInfo['army'])),
 				'armamentlost' => $armamentLost,
 			);
 
