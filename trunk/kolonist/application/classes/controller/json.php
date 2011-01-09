@@ -398,6 +398,32 @@ class Controller_Json extends Controller_Default {
 //		}
 	}
 
+	public function action_cycle2() {
+		$provinces = ORM::factory('province')->with('user')->find_all();
+
+		foreach ($provinces as $province) {
+			$jsonProvince['id'] = $province->id;
+			$jsonProvince['name'] = $province->name;
+
+			if (!$province->user) {
+				$jsonProvince['owner'] = null;
+			} else {
+				$jsonProvince['owner']['id'] = $province->user->id;
+				$jsonProvince['owner']['nickname'] = $province->user->username;
+			}
+
+			$this->view['provinces'][] = $jsonProvince;
+		}
+
+		$n = 10;
+		for ($i = 0; $i < $n; ++$i) {
+			$jsonInfo['message'] = 'This is a test message ' . $i;
+			$jsonInfo['date'] = time() - ($n - $i) * 8600;
+
+			$this->view['infos'][] = $jsonInfo;
+		}
+	}
+
 	protected function isUserOwnerOfProvince($province) {
 		return $province->user->id === $this->user->id;
 	}
