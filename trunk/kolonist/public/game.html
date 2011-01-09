@@ -71,17 +71,36 @@
                 <img src="graph/transparent.png" alt="" usemap="#mapareaitems" />
                 <map id="mapareaitems" name="mapareaitems"></map>
             </div>
-<!--                <div class="detectArea daLeft"></div>
-                <div class="detectArea daRight"></div>
-                <div class="detectArea daTop"></div>
-                <div class="detectArea daBottom"></div>
-                <div class="movePointItem">
-                    ##
-                </div>-->
+            <!--                <div class="detectArea daLeft"></div>
+                            <div class="detectArea daRight"></div>
+                            <div class="detectArea daTop"></div>
+                            <div class="detectArea daBottom"></div>
+                            <div class="movePointItem">
+                                ##
+                            </div>-->
             <div id="mapdrag"></div>
         </div>
-        <div id="messageDlg">
-            
+        <div id="messageDlg"></div>
+        <div id="nameChangerDlg">
+            <input type="text" name="pname" class="provName" />
+            <button class="changeNameAction insPID">Save</button>
+        </div>
+        <div id="moveSoildiersDlg">
+            <h3>Choose soilders to move</h3>
+            <div class="sliderInfo">
+                <div class="armyCnt"></div>
+                0
+                <input class="armySliderVal" name="armyMoveVal" value="0"/>
+                <div class="armySlider"></div>
+            </div>
+            <h3>Select destination province</h3>
+            <div>
+                <select class="provinceChoose" size="1"></select>
+            </div>
+            <div class="action">
+                <button class="moveArmyAction">Move army</button>
+            </div>
+            <input type="hidden" name="maPid" class="maPid"/>
         </div>
         <div id="provinceView">
             <div class="loading">
@@ -103,6 +122,9 @@
                     <div class="value iron"></div>
                     <div class="name">brick</div>
                     <div class="value brick"></div>
+                    <div class="separator"></div>
+                    <a class="showSoildierMoveDlg" href="#">Move army</a>
+                    <a class="showProvNameChangeDlg insPID" href="#">Province name</a>
                     <br class="clear"/>
                 </div>
                 <div class="provinceDetail">
@@ -176,6 +198,7 @@
             </div>
         </div>
         <div id="errorDialog"></div>
+        <div id="infoDialog"></div>
         <div id="buildingView">
             <div class="buildingDetail">
                 Workers: <span class="workers"></span>

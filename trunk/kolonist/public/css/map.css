@@ -523,6 +523,29 @@ fieldset.battle div.content div.scroll {
 }
 
 
+#moveSoildiersDlg {
+
+}
+#moveSoildiersDlg .sliderInfo .armyCnt {
+    float: right;
+}
+#moveSoildiersDlg .sliderInfo input.armySliderVal {
+    width: 50px;
+    margin-left: 100px;
+}
+#moveSoildiersDlg .action {
+    margin-top: 20px;
+}
+#moveSoildiersDlg .action {
+    text-align: center;
+}
+
+#nameChangerDlg {
+    text-align: center;
+}
+
+
+
 /*Nadpisanie JQuery UI*/
 body div.ui-widget-overlay {
     position: fixed;
