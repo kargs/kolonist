@@ -23,11 +23,11 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		if (time() < $lastSettlersEat->value + $this->options->foodSettlerInterval) {
+			$settlersCanEat = FALSE;
+		} else {
 			$settlersCanEat = TRUE;
 			$lastSettlersEat->value = time();
 			$lastSettlersEat->save();
-		} else {
-			$settlersCanEat = FALSE;
 		}
 
 		$provinces = ORM::factory('province')->find_all();
@@ -62,7 +62,7 @@ class Controller_Cron extends Controller_Default {
 
 		// Feed the settlers
 		if ($province->user_id != NULL && $settlersCanEat) {
-			$foodEatenBySettlers = $counts['settlers'] * $this->options->foodBySettler;
+			$foodEatenBySettlers = (int)($counts['settlers'] * $this->options->foodBySettler);
 			if ($counts['food'] < $foodEatenBySettlers) {
 				// Not enough food, some settlers eat, some go away
 				$settlersThatEat = (int)($counts['food'] / $this->options->foodBySettler);
@@ -90,19 +90,21 @@ class Controller_Cron extends Controller_Default {
 			$somethingLacking = FALSE;
 
 			// Feed workers
-			$foodEatenByWorkers = $building->workers_assigned * $this->options->foodBySettler * $buildingstat->food_by_worker;
-			if ($counts['food'] < $foodEatenByWorkers) {
-				// Not enough food, building stops
-				$building->stopped = TRUE;
-				$building->save();
-				if ($counts['food'] != 0 && $province->user_id != NULL) {
-					Utils::addInfo($province->user, '[workers-eat] Building ' . $buildingstat->type . ' on province ' . $province->name . ' stopped working because the workers had nothing to eat!');
+			if ($settlersCanEat) {
+				$foodEatenByWorkers = (int)($building->workers_assigned * $this->options->foodBySettler * $buildingstat->food_by_worker);
+				if ($counts['food'] < $foodEatenByWorkers) {
+					// Not enough food, building stops
+					$building->stopped = TRUE;
+					$building->save();
+					if ($counts['food'] != 0 && $province->user_id != NULL) {
+						Utils::addInfo($province->user, '[workers-eat] Building ' . $buildingstat->type . ' on province ' . $province->name . ' stopped working because the workers had nothing to eat!');
+					}
+					$this->debug('Workers can eat on province ' . $province->id . ', building ' . $building->id . ' stopped.');
+					continue;
+				} else {
+					$counts['food'] -= $foodEatenByWorkers;
+					$this->debug('Workers ate ' . $foodEatenByWorkers . ' food.');
 				}
-				$this->debug('Workers can eat on province ' . $province->id . ', building ' . $building->id . ' stopped.');
-				continue;
-			} else {
-				$counts['food'] -= $foodEatenByWorkers;
-				$this->debug('Workers ate ' . $foodEatenByWorkers . ' food.');
 			}
 
 			foreach ($this->resourcesNames as $resource) {
