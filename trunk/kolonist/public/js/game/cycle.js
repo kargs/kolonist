@@ -3,12 +3,25 @@ $(function() {
 
     function cycle() {
         processGameState();
-//        setTimeout(cycle, 30000);
+    //        setTimeout(cycle, 30000);
     }
 
     $('.showMsgBtn').live('click', function(event) {
         event.preventDefault();
-        $('div#messageDlg').dialog('open');
+        $.get('json/messages', function(data) {
+            var r = null;
+            if((r = parseJSON(data)) === undefined) {
+                return;
+            }
+            var html = '';
+            if(r.content.infos === undefined || r.content.infos.length == 0) {
+                html = translate('noMessages');
+            } else {
+                html = renderMessage(r.content.infos);
+            }
+            html = $('div#messageDlg').html(html);
+            $('div#messageDlg').dialog('open');
+        });
     });
 
     $('div#messageDlg').dialog({
@@ -41,19 +54,22 @@ function processGameState() {
         // komunikaty
 
         if(!(r.content.infos === undefined) && r.content.infos.length > 0) {
-            var html = '<table><thead><tr><td>'+translate('msgType')+'</td><td>'+translate('msgContent')+'</td><td>'+translate('msgDate')+'</td></tr></thead><tbody>';
-            $.each(r.content.infos, function(i, item) {
-                var date = item.date;
-                var msg = item.message;
-                var tend = msg.indexOf(']');
-                var type = msg.substr(1, tend-1);
-                msg = msg.substr(tend+1, msg.length);
-                html += '<tr class="msg_'+type+'"><td class="type"><img src="" alt=""/>'+translate(type)+'</td>';
-                html += '<td class="content">'+msg+'</td><td class="date">'+date+'</td>';
-            });
-            html += '</tbody></html>';
-            $('div#messageDlg').html(html);
+            renderMessage(r.content.infos);
+            html = $('div#messageDlg').html(html);
             $('div#messageDlg').dialog('open');
         }
     });
+}
+function renderMessage(msgs) {
+    var html = '<table><thead><tr><td>'+translate('msgType')+'</td><td>'+translate('msgContent')+'</td><td>'+translate('msgDate')+'</td></tr></thead><tbody>';
+    $.each(msgs, function(i, item) {
+        var date = item.date;
+        var msg = item.message;
+        var tend = msg.indexOf(']');
+        var type = msg.substr(1, tend-1);
+        msg = msg.substr(tend+1, msg.length);
+        html += '<tr class="msg_'+type+'"><td class="type"><img src="" alt=""/>'+translate(type)+'</td>';
+        html += '<td class="content">'+msg+'</td><td class="date">'+date+'</td>';
+    });
+    html += '</tbody></html>';
 }
