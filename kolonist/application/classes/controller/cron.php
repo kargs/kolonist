@@ -38,7 +38,7 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		// Remove old messages (more than a week)
-		ORM::factory('info')->where('date', '<', time() - 604800)->delete();
+		DB::delete('infos')->where('date', '<', time() - 604800)->execute();
 
 		$lastcron->value = time();
 		$lastcron->save();

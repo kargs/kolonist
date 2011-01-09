@@ -396,6 +396,9 @@ class Controller_Json extends Controller_Default {
 			$info->seen = 1;
 			$info->save();
 		}
+
+		// Mark all info as seen if there are more (otherwise it will flood the player)
+		DB::update('infos')->set(array('seen' => 1))->where('user_id', '=', $this->user->id)->execute();
 	}
 
 	public function action_messages() {
