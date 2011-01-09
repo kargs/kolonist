@@ -63,18 +63,42 @@ $(function(){
         }
     });
 
+//    $('.detectArea').mousemove(function(event) {
+//        var x = event.pageX;
+//        var y = event.pageY;
+//        if($(this).is('.daLeft')) {
+//            x = 10;
+//        }
+//        $('.movePointItem').css('top', y);
+//        $('.movePointItem').css('left', x);
+//        $('.movePointItem').stop().delay(1000).fadeIn();
+//    }).mouseout(function(event) {
+//        $('.movePointItem').delay(1100).stop().faceOut(function() {
+//            $(this).stop().fadeOut();
+//        });
+//    });
+
     // uaktywnienie wartswy do przeciągania
     $('.moveHandle').click(function(e){
-        $('#mapdrag').slideUp();
-        $('#mapdrag').css('display', 'block');
+        if($('#mapdrag').is(':visible')) {
+            mapareaHide()
+        } else {
+            mapareaShow();
+        }
         e.preventDefault();
     });
 
+    $('#mapareaitems area').live('dblclick', function(event) {
+        event.preventDefault();
+        mapareaShow();
+    });
 
     // przesuwanie warstwy do przesuwania
     var mouseXdelta = 0; // przyrosty wspolrzednych
     var mouseYdelta = 0;
-    $('div#mapdrag').draggable({
+    $('div#mapdrag').dblclick(function(event){
+        $(this).slideUp();
+    }).draggable({
         refreshPositions: false,
         start: function(event, ui) {
             mouseXdelta = ui.offset.left;
@@ -110,6 +134,14 @@ $(function(){
         }
     });
 });
+
+function mapareaShow() {
+    $('#mapdrag').slideDown();
+}
+function mapareaHide() {
+    $('#mapdrag').slideUp();
+}
+
 function buildCache() {
     var dimenstion2 = Math.floor(mapHeight/scale);
     cache = new Array(Math.floor(mapWidth/scale));
@@ -166,7 +198,18 @@ function initMap() {
                         color = 'enemy';
                     }
                 }
+                var w = p.end.x - p.start.x;
+                var h = p.end.y - p.start.y;
+                var labelX = x;
+                var labelY = y;
+                var paddingTop = h/2;
+                var provinceName = p.name;
+                var ownerName = translate('free');
+                if(!(p.owner.nickname === undefined) && p.owner.nickname != null) {
+                    ownerName = p.owner.nickname;
+                }
                 map += '<img style="left: '+(x)+'px; top: '+(y)+'px;" src="maps/'+color+'/p'+p.id+'.png" alt="" class="province province-'+p.id+'" />';
+                map += '<div class="provinceInfo" style="padding-top: '+paddingTop+'px; left: '+(labelX)+'px; top: '+(labelY)+'px; width: '+w+'px; height: '+h+'px;"><div class="pName">'+provinceName+'</div><div class="pOwner">'+ownerName+'</div></div>';
                 maparea += '<area shape="poly" rel="'+p.id+'" href="#'+p.id+'" coords="';
                 $.each(p.points, function(i, point){
                     if(point === undefined) {
@@ -204,41 +247,43 @@ function initMap() {
 
     var mouseX = 0;
     var mouseY = 0;
-    $('#mapareaitems area').draggable({
-        //        refreshPositions: false,
-        //        grid: [5, 5],
-        start: function(event, ui) {
-            mouseX = ui.offset.left;
-            mouseY = ui.offset.top;
-        },
-        stop: function(event, ui) {
-            $('div#mapdrag').css('top', '0');
-            $('div#mapdrag').css('left', '0');
-            $('div#map').css('left', 0).css('top', 0);
-            initMap();
-        },
-        drag: function(event, ui) {
-            var diffX = ui.offset.left - mouseX;
-            var diffY = ui.offset.top - mouseY;
-            mouseX = ui.offset.left;
-            mouseY = ui.offset.top;
+    if(!window.opera) { // disable dragging in opera
+        $('#mapareaitems area').draggable({
+            //        refreshPositions: false,
+            //        grid: [5, 5],
+            start: function(event, ui) {
+                mouseX = ui.offset.left;
+                mouseY = ui.offset.top;
+            },
+            stop: function(event, ui) {
+                $('div#mapdrag').css('top', '0');
+                $('div#mapdrag').css('left', '0');
+                $('div#map').css('left', 0).css('top', 0);
+                initMap();
+            },
+            drag: function(event, ui) {
+                var diffX = ui.offset.left - mouseX;
+                var diffY = ui.offset.top - mouseY;
+                mouseX = ui.offset.left;
+                mouseY = ui.offset.top;
 
-            positionX -= diffX;
-            if(positionX < 0) {
-                positionX = mapWidth + positionX;
-            } else {
-                positionX %= mapWidth;
+                positionX -= diffX;
+                if(positionX < 0) {
+                    positionX = mapWidth + positionX;
+                } else {
+                    positionX %= mapWidth;
+                }
+                positionY -= diffY;
+                if(positionY < 0) {
+                    positionY = mapHeight + positionY;
+                } else {
+                    positionY %= mapHeight;
+                }
+                $('#px').val(positionX);
+                $('#py').val(positionY);
+                $('div#map').css('left',  ui.offset.left).css('top',  ui.offset.top);
             }
-            positionY -= diffY;
-            if(positionY < 0) {
-                positionY = mapHeight + positionY;
-            } else {
-                positionY %= mapHeight;
-            }
-            $('#px').val(positionX);
-            $('#py').val(positionY);
-            $('div#map').css('left',  ui.offset.left).css('top',  ui.offset.top);
-        }
-    });
+        });
+    }
 }
 

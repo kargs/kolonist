@@ -33,7 +33,12 @@
                     <div id="menu">
                     </div>
                     <div id="infobar">
-                        <input type="button" class="myProvincesButton" value="My provinces"/>
+                        <a class="myProvincesButton" href="#">My provinces</a>
+                        <div class="separator"></div>
+                        <a class="moveHandle" href="#">Move</a>
+                        <div class="separator"></div>
+                        <a class="showMsgBtn" href="#">LastMessages</a>
+
                         <div class="material">
                             Kasza manna
                         </div>
@@ -49,7 +54,6 @@
                         <div class="material">
                             Drągi
                         </div>
-                        <a class="moveHandle" href="#">Przeciągnij</a>
                         <!--                        <a href="javascript:showProvince(2);">Pokaż prowincję</a>
                                                 <input type="text" id="px" size="3" />
                                                 <input type="text" id="py" size="3" />
@@ -67,8 +71,17 @@
                 <img src="graph/transparent.png" alt="" usemap="#mapareaitems" />
                 <map id="mapareaitems" name="mapareaitems"></map>
             </div>
-            <!--            <div id="mapMenuBall"></div>-->
+<!--                <div class="detectArea daLeft"></div>
+                <div class="detectArea daRight"></div>
+                <div class="detectArea daTop"></div>
+                <div class="detectArea daBottom"></div>
+                <div class="movePointItem">
+                    ##
+                </div>-->
             <div id="mapdrag"></div>
+        </div>
+        <div id="messageDlg">
+            
         </div>
         <div id="provinceView">
             <div class="loading">

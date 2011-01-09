@@ -60,6 +60,9 @@ br.clear {
     border: 1px solid silver;
     height: 20px;
 }
+#top .moveHandle {
+    display: inline-block;
+}
 
 /*-- /koniec TOP --*/
 
@@ -103,6 +106,57 @@ div#mapdrag {
     opacity: 0.6;
     -moz-opacity: 0.6;
     background: lime;
+    display: none;
+}
+
+.provinceInfo {
+    position: absolute;
+    text-align: center;
+    font-family: Arial;
+}
+.provinceInfo .pName {
+    color: #990000;
+}
+.provinceInfo .pOwner {
+    color: #786969;
+    font-size: 11px;
+}
+
+.detectArea {
+    position: absolute;
+    z-index: 777;
+    filter:alpha(opacity=60);
+    opacity: 0.6;
+    -moz-opacity: 0.6;
+    background: green;
+}
+.detectArea:hover {
+    background: red;
+}
+.daLeft {
+    width: 40px;
+    height: 100%;
+    left:0px;
+}
+.daRight {
+    width: 40px;
+    height: 100%;
+    right: 0px;
+}
+.daTop {
+    width: 100%;
+    height: 80px;
+    top: 0px;
+}
+.daBottom {
+    width: 100%;
+    height: 40px;
+    bottom: 0px;
+}
+
+.movePointItem {
+    position: absolute;
+    background: orangered;
     display: none;
 }
 
@@ -446,7 +500,27 @@ fieldset.battle div.content div.scroll {
     color: #c40000;
 }
 
+/*-- Message Dialog --*/
+#messageDlg thead {
+    font-weight: bold;
+    color: #451616;
+    text-align: center;
+}
+#messageDlg table td {
+    vertical-align: middle;
+}
+#messageDlg tbody .type {
+    font-weight: bold;
+    text-align: center;
+}
+#messageDlg tbody .content {
+}
 
+#messageDlg tbody .date {
+    font-size: 10px;
+    color: gray;
+    text-align: center;
+}
 
 
 /*Nadpisanie JQuery UI*/
