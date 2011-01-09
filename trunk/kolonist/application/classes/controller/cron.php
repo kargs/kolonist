@@ -60,9 +60,10 @@ class Controller_Cron extends Controller_Default {
 				$counts['food'] = 0;
 				$counts['settlers'] -= $settlersThatGo;
 				Utils::addInfo($province->user, '[settlers-eat] Province ' . $province->name . ' lost ' . $settlersThatGo . ' settlers because they had nothing to eat!');
-				$this->debug('Nothing to eat on province ' . $province->id . ', ' . $settlersThatGo . ' settlers gone.');
+				$this->debug('Nothing to eat, ' . $settlersThatGo . ' settlers gone.');
 			} else {
 				$counts['food'] -= $foodEatenBySettlers;
+				$this->debug('Settlers ate ' . $foodEatenBySettlers . ' food.');
 			}
 		}
 
@@ -79,7 +80,7 @@ class Controller_Cron extends Controller_Default {
 			$somethingLacking = FALSE;
 
 			// Feed workers
-			$foodEatenByWorkers = $building->workers_assigned * $buildingstat->food_by_worker;
+			$foodEatenByWorkers = $building->workers_assigned * $this->options->foodBySettler * $buildingstat->food_by_worker;
 			if ($counts['food'] < $foodEatenByWorkers) {
 				// Not enough food, building stops
 				$building->stopped = TRUE;
@@ -91,6 +92,7 @@ class Controller_Cron extends Controller_Default {
 				continue;
 			} else {
 				$counts['food'] -= $foodEatenByWorkers;
+				$this->debug('Workers ate ' . $foodEatenByWorkers . ' food.');
 			}
 
 			foreach ($this->resourcesNames as $resource) {
