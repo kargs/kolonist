@@ -1,11 +1,24 @@
 var selectedProvince = null;
 
 $(function() {
+
+    $('.resItem').bt({
+        contentSelector: "$('.name', this).html()",
+        fill: 'gray',
+        positions: 'bottom',
+        width: '50px',
+        padding: '3px',
+        shadow: true,
+        spikeGirth: 10,
+        spikeLength: 5,
+        overlap: 5,
+        cssClass: 'resToolpit'
+    });
     $('#provinceView').dialog({
         autoOpen: false,
         modal: true,
         resizable: false,
-        width: 740,
+        width: 760,
         height: 620,
         //        dragStop: function() {
         //            alert($(this).parents('.ui-dialog').css('top'));
@@ -80,21 +93,21 @@ $(function() {
             });
             $('table tbody', $battle).html(html);
 
-			var youLost = Math.round(parseFloat(r.lostDecimal)*100);
+            var youLost = Math.round(parseFloat(r.lostDecimal)*100);
             var soldiersLost = Math.round(parseFloat(r.soldiersLost));
-			var attack = Math.round(parseFloat(r.attack));
-			var enemySoldiersLost = Math.round(parseFloat(r.victimLosts));
-			var buildingsDefenseRatio = Math.round(parseFloat(r.buildingsDefenseRatio)*100);
-			var ratioInformation = r.ratioInformation;
-			var luckInformation = r.luckInformation;
+            var attack = Math.round(parseFloat(r.attack));
+            var enemySoldiersLost = Math.round(parseFloat(r.victimLosts));
+            var buildingsDefenseRatio = Math.round(parseFloat(r.buildingsDefenseRatio)*100);
+            var ratioInformation = r.ratioInformation;
+            var luckInformation = r.luckInformation;
 
             $('#battleResultDialog .yourLost').html(youLost);
-			$('#battleResultDialog .soldiersLost').html(soldiersLost);
-			$('#battleResultDialog .attack').html(attack);
-			$('#battleResultDialog .enemySoldiersLost').html(enemySoldiersLost);
-			$('#battleResultDialog .buildingsDefenseRatio').html(buildingsDefenseRatio);
-			$('#battleResultDialog .ratioInformation').html(ratioInformation);
-			$('#battleResultDialog .luckInformation').html(luckInformation);
+            $('#battleResultDialog .soldiersLost').html(soldiersLost);
+            $('#battleResultDialog .attack').html(attack);
+            $('#battleResultDialog .enemySoldiersLost').html(enemySoldiersLost);
+            $('#battleResultDialog .buildingsDefenseRatio').html(buildingsDefenseRatio);
+            $('#battleResultDialog .ratioInformation').html(ratioInformation);
+            $('#battleResultDialog .luckInformation').html(luckInformation);
 
             $('#enemyDialog').dialog('close');
             $('#battleResultDialog').dialog('open');
@@ -249,8 +262,8 @@ function updateProvince(id) {
             }
             var p = selectedProvince = r.content;
             var resources = p.resources;
-			var gains = p.gains;
-			var maxes = p.maxes;
+            var gains = p.gains;
+            var maxes = p.maxes;
             for (var resName in resources) {
                 $('div#provinceView .resourcesbar .'+resName).html(resources[resName] + ' / ' + maxes[resName] + ' (' + gains[resName] + ')');
             }
@@ -293,6 +306,9 @@ function updateProvince(id) {
                     slots[b.slot_index].balls = balls;
                     slots[b.slot_index].img = 'graph/buildings/'+b.type+'.png';
 
+                    if(parseInt(b.stopped) == 1){
+                        slots[b.slot_index].icon = "stopped";
+                    }
                 }
             });
             for(var i=0; i < slotMax; i++) {
@@ -300,6 +316,7 @@ function updateProvince(id) {
                 var img = 'graphics/slot.png';
                 var click = null;
                 var params = null;
+                var icon = null;
                 if(slots[i] == null) {  // domyślne budynki
                     click = function(event, param) {
                         showBuildingChooser(id, param);
@@ -308,26 +325,17 @@ function updateProvince(id) {
                         resources: p.resources,
                         slotIndex: i
                     };
-                //                    for (var bname in buildings) {
-                //                        // sprawdzać ilość resourców
-                //                        balls[balls.length] = {
-                //                            css: 'bgtoggle develop',
-                //                            title: 'Build '+bname,
-                //                            params: [p.id, i, bname],
-                //                            click: function (e, params) {
-                //                                createBuilding(params[0], params[1], params[2]);
-                //                            }
-                //                        }
-                //                    }
                 } else {
                     balls = slots[i].balls;
                     img = slots[i].img;
+                    icon = slots[i].icon;
                 }
                 buildBallMenu($('#slot'+i), {
                     img: img,
                     css: 'test',
                     click: click,
                     params: params,
+                    icon: icon,
                     style: 'color:orange'
                 }, balls);
             }

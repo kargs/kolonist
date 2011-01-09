@@ -54,6 +54,9 @@ function buildBallMenu(context, options, balls) {
     }
     var r = '<div id="'+options.id+'" class="ball_item '+options.css+'" style="'+options.style+'">';
     r += '<div class="ball_content">';
+    if(!(options.icon == undefined)) {
+        r += '<div class="bc_icon '+options.icon+'"></div>';
+    }
     if(!(options.img == undefined)) {
         r += '<img src="'+options.img+'" alt="" />';
     }

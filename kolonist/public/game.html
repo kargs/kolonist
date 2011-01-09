@@ -9,6 +9,9 @@
         <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
 
+        <link type="text/css" href="css/jquery.bt.css" rel="stylesheet" />
+        <script type="text/javascript" src="js/jquery.bt.min.js"></script>
+
         <link type="text/css" href="css/ball_menu.css" rel="stylesheet" />
         <script type="text/javascript" src="js/ball_menu.js"></script>
 
@@ -108,26 +111,67 @@
             </div>
             <div class="loaded">
                 <div class="resourcesbar ui-corner-all ui-widget-header">
-                    <div class="name">settlers</div>
-                    <div class="value settlers"></div>
-                    <div class="name">soldiers</div>
-                    <div class="value soldiers"></div>
-                    <div class="name">armament</div>
-                    <div class="value armament"></div>
-                    <div class="name">food</div>
-                    <div class="value food"></div>
-                    <br class="clear"/>
-                </div>
-				<div class="resourcesbar ui-corner-all ui-widget-header">
-                    <div class="name">wood</div>
-                    <div class="value wood"></div>
-                    <div class="name">iron</div>
-                    <div class="value iron"></div>
-                    <div class="name">brick</div>
-                    <div class="value brick"></div>
-                    <div class="separator"></div>
-                    <a class="showSoildierMoveDlg" href="#">Move army</a>
-                    <a class="showProvNameChangeDlg insPID" href="#">Province name</a>
+                    <div class="actionMenu">
+                        <div class="icon"><span class="ui-icon ui-icon-circle-triangle-s"></span></div>
+                        <div class="items">
+                            <div class="icon icon-adv">Actions <span class="ui-icon ui-icon-circle-triangle-s"></span></div>
+                            <br class="clear"/>
+                            <ul>
+                                <li><a class="showSoildierMoveDlg" href="#">Move army</a></li>
+                                <li><a class="showProvNameChangeDlg insPID" href="#">Province name</a></li>
+                            </ul>
+                        </div>
+                        <br class="clear"/>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">settlers</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/settlers.png" alt=""/>
+                        </div>
+                        <div class="value settlers"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">soldiers</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/soldiers.png" alt=""/>
+                        </div>
+                        <div class="value soldiers"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">armament</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/swords.png" alt=""/>
+                        </div>
+                        <div class="value armament"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">food</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/bread.png" alt=""/>
+                        </div>
+                        <div class="value food"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">wood</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/wood.png" alt=""/>
+                        </div>
+                        <div class="value wood"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">iron</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/iron.png" alt=""/>
+                        </div>
+                        <div class="value iron"></div>
+                    </div>
+                    <div class="resItem">
+                        <div class="name">brick</div>
+                        <div class="icon">
+                            <img src="/graph/buildings/brick.png" alt=""/>
+                        </div>
+                        <div class="value brick"></div>
+                    </div>
                     <br class="clear"/>
                 </div>
                 <div class="provinceDetail">
@@ -202,8 +246,33 @@
         </div>
         <div id="errorDialog"></div>
         <div id="infoDialog"></div>
-        <div id="buildingView">
-            <div class="buildingDetail">
+        <div id="buildingView" class="buildingCart">
+            <div class="title">Building details</div>
+            <div class="upgrader">
+                <div class="buildingDetails">
+                    <div class="left">
+                        <div class="avatar">
+                            <img src="" alt=""/>
+                        </div>
+                        <div class="type"></div>
+                        <div class="levelWrapper">
+                            Level
+                            <span class="level"></span>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <h2>Gains</h2>
+                        <div class="gainsItems"></div>
+                    </div>
+                    <br class="clear"/>
+                </div>
+                <div class="Wrapper">
+                    <div class="properties"></div>
+                    <br class="clear"/>
+                </div>
+            </div>
+
+            <div class="buildingDetail" style="display: none;">
                 Workers: <span class="workers"></span>
                 <a class="increaseWorkers" href="#">Increase workers</a>
                 <a class="decreaseWorkers" href="#">Decrease workers</a>
@@ -264,20 +333,20 @@
             </div>
             <br class="clear" />
             <div>
-				<b>You</b>:<br/>
+                <b>You</b>:<br/>
                 - lost <span class="yourLost"></span>% of soldiers<br/>
                 - which is <span class="soldiersLost"></span> soldiers in total<br/>
 				- your attack value was <span class="attack"></span><br/><br/>
 
-				<b>The Enemy</b>:<br/>
+                <b>The Enemy</b>:<br/>
 				- lost <span class="enemySoldiersLost"></span> soldiers<br/>
 				- about <span class="buildingsDefenseRatio"></span>% of defense was caused by buildings<br/><br/>
 
-				<b>The Fight</b>:<br/>
+                <b>The Fight</b>:<br/>
 				- <span class="ratioInformation"></span><br/>
 				- <span class="luckInformation"></span><br/><br/>
 
-				<b>Details:</b><br/>
+                <b>Details:</b><br/>
             </div>
             <div class="battleDetails">
                 <table>
