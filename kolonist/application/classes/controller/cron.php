@@ -16,26 +16,36 @@ class Controller_Cron extends Controller_Default {
 
 	public function action_cycle() {
 		$lastcron = ORM::factory('option')->where('name', '=', 'lastcron')->find();
+		$lastSettlersEat = ORM::factory('option')->where('name', '=', 'lastSettlersEat')->find();
 
 		if (time() < $lastcron->value + $this->options->cronInterval) {
 			die('Request made to soon');
+		}
+
+		if (time() < $lastSettlersEat->value + $this->options->foodSettlerInterval) {
+			$settlersCanEat = TRUE;
+			$lastSettlersEat->value = time();
+			$lastSettlersEat->save();
+		} else {
+			$settlersCanEat = FALSE;
 		}
 
 		$provinces = ORM::factory('province')->find_all();
 
 		foreach ($provinces as $province) {
 			$this->debug('Going through province ' . $province->id);
-			$this->cycleProvince($province);
+			$this->cycleProvince($province, $settlersCanEat);
 		}
 
-		// TODO: dodac info o zdarzeniach
+		// Remove old messages (more than a week)
+		ORM::factory('info')->where('date', '<', time() - 604800)->delete();
 
 		$lastcron->value = time();
 		$lastcron->save();
 		die('Succeed');
 	}
 
-	protected function cycleProvince($province) {
+	protected function cycleProvince($province, $settlersCanEat) {
 		$counts = $maxes = $this->resourcesTemplateArray;
 		foreach ($this->resourcesNames as $resource) {
 			$counts[$resource] = $province->{$resource . '_count'};
@@ -51,7 +61,7 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		// Feed the settlers
-		if ($province->user_id != NULL) {
+		if ($province->user_id != NULL && $settlersCanEat) {
 			$foodEatenBySettlers = $counts['settlers'] * $this->options->foodBySettler;
 			if ($counts['food'] < $foodEatenBySettlers) {
 				// Not enough food, some settlers eat, some go away
