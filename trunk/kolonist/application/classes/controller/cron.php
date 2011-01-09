@@ -36,9 +36,18 @@ class Controller_Cron extends Controller_Default {
 	}
 
 	protected function cycleProvince($province) {
-		$counts = $this->resourcesTemplateArray;
+		$counts = $maxes = $this->resourcesTemplateArray;
 		foreach ($this->resourcesNames as $resource) {
 			$counts[$resource] = $province->{$resource . '_count'};
+		}
+
+		// We need to compute the general maxes for the province
+		foreach($province->buildings->find_all() as $building) {
+			if ($building) {
+				foreach ($this->resourcesNames as $resource) {
+					$maxes[$resource] += $building->buildingstat->{$resource . '_max'};
+				}
+			}
 		}
 
 		// Feed the settlers
@@ -50,7 +59,7 @@ class Controller_Cron extends Controller_Default {
 				$settlersThatGo = $counts['settlers'] - $settlersThatEat;
 				$counts['food'] = 0;
 				$counts['settlers'] -= $settlersThatGo;
-				Utils::addInfo($province->user, 'Province ' . $province->name . ' lost ' . $settlersThatGo . ' settlers because they had nothing to eat!');
+				Utils::addInfo($province->user, '[settlers-eat] Province ' . $province->name . ' lost ' . $settlersThatGo . ' settlers because they had nothing to eat!');
 				$this->debug('Nothing to eat on province ' . $province->id . ', ' . $settlersThatGo . ' settlers gone.');
 			} else {
 				$counts['food'] -= $foodEatenBySettlers;
@@ -75,8 +84,8 @@ class Controller_Cron extends Controller_Default {
 				// Not enough food, building stops
 				$building->stopped = TRUE;
 				$building->save();
-				if ($province->user_id != NULL) {
-					Utils::addInfo($province->user, 'Building ' . $buildingstat->type . ' on province ' . $province->name . ' stopped working because the workers had nothing to eat!');
+				if ($counts['food'] != 0 && $province->user_id != NULL) {
+					Utils::addInfo($province->user, '[workers-eat] Building ' . $buildingstat->type . ' on province ' . $province->name . ' stopped working because the workers had nothing to eat!');
 				}
 				$this->debug('Workers can eat on province ' . $province->id . ', building ' . $building->id . ' stopped.');
 				continue;
@@ -92,13 +101,16 @@ class Controller_Cron extends Controller_Default {
 
 					$changes[$resource] = $change;
 
-					if ($change > $buildingstat->{$resource . '_max'}) {
-						$change = $buildingstat->{$resource . '_max'};
+					if ($counts[$resource] + $change > $maxes[$resource]) {
+						$change = $maxes[$resource] - $counts[$resource];
 						$this->debug('Max value achieved for ' . $resource);
-						if ($province->user_id != NULL) {
-							Utils::addInfo($province->user, 'Province ' . $province->name . ' cannot store more ' . $resource);
+						if ($counts[$resource] != $maxes[$resource] && $province->user_id != NULL) {
+							Utils::addInfo($province->user, '[storage] Province ' . $province->name . ' cannot store more ' . $resource);
 						}
-					} else if ($counts[$resource] - $change < 0) {
+					} else if ($counts[$resource] + $change < 0) {
+						if ($counts[$resource] != 0 && $province->user_id != NULL) {
+							Utils::addInfo($province->user, '[resources] The ' . $buildingstat->type . ' in province ' . $province->name . ' cannot work because of infufficient ' . $resource . '.');
+						}
 						$somethingLacking = TRUE;
 						break;
 					}
@@ -107,9 +119,6 @@ class Controller_Cron extends Controller_Default {
 
 			if ($somethingLacking) {
 				$this->debug('Insufficient resources for the building to work');
-				if ($province->user_id != NULL) {
-					Utils::addInfo($province->user, 'The ' . $buildingstat->type . ' in province ' . $province->name . ' cannot work because of infufficient resources.');
-				}
 				$building->stopped = TRUE;
 			} else {
 				$building->stopped = FALSE;
