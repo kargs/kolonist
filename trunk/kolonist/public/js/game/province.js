@@ -6,7 +6,7 @@ $(function() {
         modal: true,
         resizable: false,
         width: 740,
-        height: 570,
+        height: 620,
         //        dragStop: function() {
         //            alert($(this).parents('.ui-dialog').css('top'));
         //        },
@@ -249,8 +249,10 @@ function updateProvince(id) {
             }
             var p = selectedProvince = r.content;
             var resources = p.resources;
+			var gains = p.gains;
+			var maxes = p.maxes;
             for (var resName in resources) {
-                $('div#provinceView .resourcesbar .'+resName).html(resources[resName]);
+                $('div#provinceView .resourcesbar .'+resName).html(resources[resName] + ' / ' + maxes[resName] + ' (' + gains[resName] + ')');
             }
             $('.showSoildierMoveDlg').attr('soldiers', resources.soldiers);
             var slots = new Array();
