@@ -34,7 +34,7 @@ $(function() {
 });
 
 function processGameState() {
-    $.get(ajaxProxy+'json/cycle2', {}, function(data) {
+    $.get(ajaxProxy+'json/cycle', {}, function(data) {
         var r = null;
         if((r = parseJSON(data)) === undefined) {
             return;
