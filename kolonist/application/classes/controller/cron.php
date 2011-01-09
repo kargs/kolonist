@@ -115,15 +115,9 @@ class Controller_Cron extends Controller_Default {
 
 					$changes[$resource] = $change;
 
-					if ($counts[$resource] + $change > $maxes[$resource]) {
-						$change = $maxes[$resource] - $counts[$resource];
-						$this->debug('Max value achieved for ' . $resource);
-						if ($counts[$resource] != $maxes[$resource] && $province->user_id != NULL) {
-//							Utils::addInfo($province->user, '[storage] Province ' . $province->name . ' cannot store more ' . $resource);
-						}
-					} else if ($counts[$resource] + $change < 0) {
+					if ($counts[$resource] + $change < 0) {
 						if ($counts[$resource] != 0 && $province->user_id != NULL) {
-							Utils::addInfo($province->user, '[resources] The ' . $buildingstat->type . ' in province ' . $province->name . ' cannot work because of infufficient ' . $resource . '.');
+							Utils::addInfo($province->user, '[resources] The ' . $buildingstat->type . ' in province ' . $province->name . ' cannot work because of insufficient ' . $resource . '.');
 						}
 						$somethingLacking = TRUE;
 						break;
@@ -146,6 +140,14 @@ class Controller_Cron extends Controller_Default {
 		}
 
 		foreach ($this->resourcesNames as $resource) {
+			if ($province->user_id != NULL && $counts[$resource] > $maxes[$resource]) {
+				// Only 10% of excessive resources at a time disappears
+				$this->debug('Max value surpassed for ' . $resource);
+				$loss = (int)(($counts[$resource] - $maxes[$resource]) * 0.1);
+				$counts[$resource] -= $loss;
+//					Utils::addInfo($province->user, '[storage] Province ' . $province->name . ' cannot store more ' . $resource);
+			}
+
 			$province->{$resource . '_count'} = $counts[$resource];
 		}
 
