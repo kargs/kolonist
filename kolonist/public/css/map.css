@@ -284,6 +284,32 @@ div#provinceView .resourcesbar .actionMenu .items .icon-adv {
 div#buildingView {
 
 }
+div#buildingView .info {
+    position: relative;
+    min-height: 180px;
+}
+div#buildingView .info .buildingAttribute {
+    position: absolute;
+    bottom: 0px;
+    right: 50px;
+}
+div#buildingView .info .buildingAttribute img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+/*div#buildingView .info .creaseWorkers,
+div#buildingView .info .creaseWorkers span.ui-icon {
+    display: inline-block;
+}*/
+div#buildingView .workersDetails .workers {
+    font-size: 16px;
+    font-weight: bold;
+}
+div#buildingView .info .creaseWorkers a {
+    display: block;
+}
+
 div#buildingView div.buildingDetail {
     background: url(../graph/buildings/inside.png) no-repeat;
     width: 100%;
