@@ -3,7 +3,7 @@ $(function() {
 
     function cycle() {
         processGameState();
-//    //        setTimeout(cycle, 30000);
+        setTimeout(cycle, 30000);
     }
 
     $('.showMsgBtn').live('click', function(event) {
@@ -41,6 +41,8 @@ function processGameState() {
             return;
         }
         var html = '<ul>';
+        var waitLoop = 100000;
+        for(; waitLoop > 0 && provincesAsoc === undefined; waitLoop--);
         $.each(r.content.provinces, function(i, item) {
             provincesAsoc[item.id].owner = item.owner;
             provincesAsoc[item.id].name = item.name;

@@ -160,6 +160,9 @@ function buildCache() {
 }
 function initMap() {
     //    $('#map').empty();    //faster
+    if(cache === undefined) {
+        return;
+    }
     var px = positionX;
     var py = positionY;
     var spx = Math.floor(px/scale);
