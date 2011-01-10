@@ -332,8 +332,8 @@ function _renderBuildingParams(type, property) {
         html += '<td>'+li0+'</td>';
     }
     html += '</tr></thead><tbody>';
-    if(property == 'misc') {
-        for(var pi in []) {
+    if(property == '_misc') {
+        for(var pi in {defense: 0, food_by_worker: 0}) {
             html += '<tr><td>'+translate(pi)+'</td>';
             for(var li in buildings[type]) {
                 var b = buildings[type][li];
