@@ -29,7 +29,8 @@ $(function() {
         resizable: false,
         modal: true,
         title: translate('msgDlgTitle'),
-        width: 430
+        width: 430,
+        height: $(window).height()
     });
 });
 
