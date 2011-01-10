@@ -61,6 +61,11 @@ translator['fight-loose'] = 'Defeat';
 translator['settlers-eat'] = 'Starvation';
 translator['workers-eat'] = 'Starvation';
 translator['noMessages'] = 'No messages are available';
+translator['buildingPropGroup_requirement'] = 'Create / upgrade requirements';
+translator['buildingPropGroup_gain'] = 'Building gains';
+translator['buildingPropGroup_max'] = 'Building capacity';
+translator['buildingParam'] = 'Resource';
+
 
 
 
