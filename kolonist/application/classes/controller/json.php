@@ -308,7 +308,7 @@ class Controller_Json extends Controller_Default {
 			$fightInformation['victimLosts'] = $victimLosts;
 			$provinceToAttack->save();
 			if ($provinceToAttack->user_id != NULL) {
-				Utils::addInfo($provinceToAttack->user, '[fight-win] Your province ' . $provinceToAttack->name . 'was attacked by ' . $this->user->username . ' but it survived! You lost ' . $victimLosts . ' soldiers.');
+				Utils::addInfo($provinceToAttack->user, '[fight-win] Your province ' . $provinceToAttack->name . ' was attacked by ' . $this->user->username . ' but it survived! You lost ' . $victimLosts . ' soldiers.');
 			}
 		}
 

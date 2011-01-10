@@ -66,7 +66,7 @@ translator['buildingPropGroup_gain'] = 'Building gains';
 translator['buildingPropGroup_max'] = 'Building capacity';
 translator['buildingPropGroup_misc'] = 'Miscellaneous information';
 translator['buildingParam'] = 'Level';
-
+translator['duildingDetals'] = 'Building details'
 
 
 
