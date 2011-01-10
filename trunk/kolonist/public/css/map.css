@@ -125,13 +125,23 @@ div#mapdrag {
     top: 0px;
     left: 0px;
     z-index: 777;
+    background: transparent;
+    display: none;
+}
+.mapdragLayer {
+
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: 0px;
+    left: 0px;
+    z-index: 775;
     filter:alpha(opacity=60);
     opacity: 0.6;
     -moz-opacity: 0.6;
     background: black;
     display: none;
 }
-
 .provinceInfo {
     position: absolute;
     text-align: center;
@@ -205,7 +215,7 @@ div#provinceView div.provinceDetail {
 }
 div#provinceView .resourcesbar {
     height: 30px;
-    font-size: 12px;
+    font-size: 11px;
     color: #454545;
     padding-top: 5px;
     padding-left: 10px;
