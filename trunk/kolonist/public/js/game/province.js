@@ -6,7 +6,7 @@ $(function() {
         contentSelector: "$('.name', this).html()",
         fill: 'gray',
         positions: 'bottom',
-        width: '50px',
+        width: '60px',
         padding: '3px',
         shadow: true,
         spikeGirth: 10,
