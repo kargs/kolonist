@@ -34,6 +34,10 @@ function moveTo(x, y) {
  */
 function centerProvince(id) {
     var p = provincesAsoc[id];
+    if(p == null) {
+        processError('NoProvince', 'There is no province id '+id+'.');
+        return;
+    }
     var cx = Math.round((p.start.x + p.end.x ) / 2);
     var cy = Math.round((p.start.y + p.end.y ) / 2);
     moveTo(cx, cy);
@@ -282,7 +286,7 @@ function initMap() {
                 positionY -= diffY;
                 if(positionY < 0) {
                     positionY = mapHeight + positionY;
-                } else {
+                }else {
                     positionY %= mapHeight;
                 }
                 $('#px').val(positionX);
