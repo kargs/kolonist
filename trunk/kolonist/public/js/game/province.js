@@ -19,7 +19,7 @@ $(function() {
         modal: true,
         resizable: false,
         width: 760,
-        height: 620,
+        height: 570,
         //        dragStop: function() {
         //            alert($(this).parents('.ui-dialog').css('top'));
         //        },
@@ -289,9 +289,9 @@ function updateProvince(id) {
                     balls[balls.length] = {
                         css: 'bgtoggle info',
                         title: 'More',
-                        params: [p.id, b],
+                        params: [p.id, b, p.resources],
                         click: function (e, params) {
-                            showBuilding(params[0], params[1]);
+                            showBuilding(params[0], params[1], params[2]);
                         }
                     }
                     balls[balls.length] = {
