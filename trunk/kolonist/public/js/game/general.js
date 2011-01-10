@@ -1,5 +1,5 @@
 var ajaxProxy = 'proxy.php?url=';
-//ajaxProxy = '';
+ajaxProxy = '';
 var slotMax = 5;
 var userId = 4;
 var userName = '';
@@ -50,6 +50,41 @@ $(function() {
         initMap();
         setCurrentProgress('player');
         setCurrentMapPosition();
+    });
+
+    $('#noAuthDlg').dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        title: translate('noAuth'),
+        close: function () {
+                document.location = '/';
+        },
+        buttons: [
+        {
+            text: translate('leaveGame'),
+            click: function() {
+                $(this).dialog('close');
+            }
+        }
+        ]
+    });
+    $('#looserDlg').dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        title: translate('lostGame'),
+        close: function () {
+                document.location = '/';
+        },
+        buttons: [
+        {
+            text: translate('leaveGame'),
+            click: function() {
+                $(this).dialog('close');
+            }
+        }
+        ]
     });
 });
 
@@ -106,10 +141,23 @@ function parseJSON(data) {
         processError('DATA_ERROR', 'Kolonist data format invalid.');
         return undefined;
     }
+    if(!(r.content.status === undefined)) {
+        if(r.content.status == 'NOAUTH') {
+            showNoAuthDialog(r.content);
+        } else if(r.content.status == 'LOOSER') {
+            showLooserDialog(r.content);
+        }
+    }
     if(isError(r)) {
         return undefined;
     }
     return r;
+}
+function showNoAuthDialog(data) {
+    $('#noAuthDlg').dialog('open');
+}
+function showLooserDialog(data) {
+    $('#looserDlg').dialog('open');
 }
 
 function isError(data) {
@@ -121,10 +169,10 @@ function isError(data) {
 }
 
 function isArray(obj) {
-   if (obj.constructor.toString().indexOf("Array") == -1)
-      return false;
-   else
-      return true;
+    if (obj.constructor.toString().indexOf("Array") == -1)
+        return false;
+    else
+        return true;
 }
 
 function dump(v) {
