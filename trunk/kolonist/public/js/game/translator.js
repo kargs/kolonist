@@ -64,7 +64,8 @@ translator['noMessages'] = 'No messages are available';
 translator['buildingPropGroup_requirement'] = 'Create / upgrade requirements';
 translator['buildingPropGroup_gain'] = 'Building gains';
 translator['buildingPropGroup_max'] = 'Building capacity';
-translator['buildingParam'] = 'Resource';
+translator['buildingPropGroup_misc'] = 'Miscellaneous information';
+translator['buildingParam'] = 'Level';
 
 
 
