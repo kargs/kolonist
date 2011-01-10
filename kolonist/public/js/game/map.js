@@ -98,6 +98,7 @@ $(function(){
     var mouseYdelta = 0;
     $('div#mapdrag').dblclick(function(event){
         $(this).slideUp();
+        $('.mapdragLayer').slideUp();
     }).draggable({
         refreshPositions: false,
         start: function(event, ui) {
@@ -137,9 +138,11 @@ $(function(){
 
 function mapareaShow() {
     $('#mapdrag').slideDown();
+    $('.mapdragLayer').slideDown();
 }
 function mapareaHide() {
     $('#mapdrag').slideUp();
+    $('.mapdragLayer').slideUp();
 }
 
 function buildCache() {
