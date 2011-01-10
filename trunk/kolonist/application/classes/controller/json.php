@@ -37,8 +37,13 @@ class Controller_Json extends Controller_Default {
 	}
 
 	public function action_currentuser() {
-		$this->view['id'] = $this->user->id;
-		$this->view['username'] = $this->user->username;
+		if (!Auth::instance()->logged_in()) {
+			$this->view['id'] = 0;
+			$this->view['username'] = 'guest';
+		} else {
+			$this->view['id'] = $this->user->id;
+			$this->view['username'] = $this->user->username;
+		}
 	}
 
 	/**
@@ -411,6 +416,19 @@ class Controller_Json extends Controller_Default {
 	 * Returns info about the world. It has to be invoked regularly.
 	 */
 	public function action_cycle() {
+		if (!Auth::instance()->logged_in()) {
+			$this->view['status'] = 'NOAUTH';
+			return;
+		}
+
+		$userProvinces = ORM::factory('province')->where('user_id', '=', $this->user->id)->find_all();
+		if (count($userProvinces) == 0) {
+			$this->view['status'] = 'LOOSER';
+			return;
+		}
+
+		$this->view['status'] = 'OK';
+
 		$provinces = ORM::factory('province')->with('user')->find_all();
 
 		foreach ($provinces as $province) {
