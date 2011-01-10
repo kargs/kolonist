@@ -30,7 +30,7 @@ $(function() {
         modal: true,
         title: translate('msgDlgTitle'),
         width: 430,
-        height: $(window).height()
+        height: $(window).height()*0.8
     });
 });
 
