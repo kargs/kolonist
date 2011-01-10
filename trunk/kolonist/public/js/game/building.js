@@ -31,6 +31,7 @@ $(function() {
         autoOpen: false,
         //        resizable: false,
         modal: true,
+        title: translate('duildingDetails'),
         height: 500,
         width: 530,
         open: function() {
@@ -292,6 +293,7 @@ function showBuilding(provinceId, building, resources) {
     $('.workers', $bv).html(building.workers);
     $('.increaseWorkers', $bv).click(function(event) {
         event.preventDefault();
+        event.preventBubble();
         var workersCnt = parseInt(building.workers) + 1;
         $.get('json/attachworkers/'+provinceId+'/'+building.slot_index+'/'+workersCnt, function(data) {
             var r = null;
