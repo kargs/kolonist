@@ -27,6 +27,13 @@ br.clear {
     background-position: bottom;
     height: 40px;
 }
+/*#top .top_content a {
+    text-decoration: none;
+    color: white;
+}
+#top .top_content a:hover {
+    color: #FFE69C;
+}*/
 #top .logo {
     /*    position: absolute;*/
     position: relative;
@@ -56,7 +63,8 @@ br.clear {
     padding: 5px;
 }
 #top #infobar div.separator {
-    float: left;
+    display: inline;
+    display: inline-block;
     border: 1px solid silver;
     height: 20px;
 }

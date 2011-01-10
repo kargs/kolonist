@@ -6,7 +6,7 @@ $(function(){
         $(this).stop().animate({
             top: 0
         }, 200);
-        $('.top_content *', this).stop().animate({
+        $('.top_content > *', this).stop().animate({
             opacity: 1.0
         });
     }).mouseleave(function(){
@@ -16,13 +16,13 @@ $(function(){
         $(this).stop().animate({
             top: -30
         });
-        $('.top_content *', this).stop().animate({
+        $('.top_content > *', this).stop().animate({
             opacity: 0.0
         });
     });
-    $('#top #menu a').button({
-        height: 30
-    });
+//    $('#top #menu a').button({
+//
+//    });
 
     $('button').button();
 
