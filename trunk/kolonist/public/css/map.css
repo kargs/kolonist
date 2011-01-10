@@ -72,6 +72,21 @@ br.clear {
     display: inline-block;
 }
 
+#top #menu a {
+	font-family: sans-serif;
+	font-size: 0.7em;
+	text-transform: uppercase;
+	margin-left: 40px;
+	text-decoration:none;
+	color: #99192b;
+	font-weight: bold;
+	margin-top: 7px;
+}
+
+#top #menu a:hover {
+	text-decoration: underline;
+}
+
 /*-- /koniec TOP --*/
 
 /*-- Mapa --*/
@@ -113,7 +128,7 @@ div#mapdrag {
     filter:alpha(opacity=60);
     opacity: 0.6;
     -moz-opacity: 0.6;
-    background: lime;
+    background: black;
     display: none;
 }
 
