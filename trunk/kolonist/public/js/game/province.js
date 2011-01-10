@@ -1,5 +1,6 @@
 var selectedProvince = null;
 
+var refreshProvince = false;
 $(function() {
 
     $('.resItem').bt({
@@ -25,6 +26,11 @@ $(function() {
         //        },
         beforeClose: function(event, ui) {
             selectedProvince = null;
+            refreshProvince = false;
+        },
+        open: function() {
+            refreshProvince = true;
+            refreshProvinceCycle();
         },
         show: 'clip',
         hide: 'fold'
@@ -180,6 +186,15 @@ $(function() {
     
 
 });
+
+function refreshProvinceCycle() {
+    if(selectedProvince != null) {
+        updateProvince(selectedProvince.id);
+    }
+    if(refreshProvince) {
+        setTimeout('refreshProvinceCycle();', 20000);
+    }
+}
 
 function showSoildiersMoveDialog(pid, armyCnt) {
     $('#moveSoildiersDlg .armySlider').slider('option', 'value', 0);
