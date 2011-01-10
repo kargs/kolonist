@@ -6,9 +6,13 @@
         <base href="<?php echo url::base(); ?>" />
         <link type="text/css" href="/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
         <link type="text/css" href="/css/style.css" rel="stylesheet"  />
+        <link rel="stylesheet" href="/css/lightbox.css" type="text/css" media="screen" />
         <script type="text/javascript" src="/js/jquery-1.4.3.js"></script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
         <script type="text/javascript" src="/js/script.js"></script>
+        <script type="text/javascript" src="/js/prototype.js"></script>
+        <script type="text/javascript" src="/js/scriptaculous.js?load=effects,builder"></script>
+        <script type="text/javascript" src="/js/lightbox.js"></script>
     </head>
     <body class="body">
         <div class="mainWrapper">
