@@ -378,6 +378,8 @@ function upgradeBuilding(province_id, slot_index) {
             return;
         }
         updateProvince(province_id);
+        processInfo('upgradeOK', 'Building upgrade completed');
+        $('div#buildingUpgrader').dialog('close');
     });
 }
 function destroyBuilding(province_id, slot_index) {
