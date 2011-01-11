@@ -95,11 +95,12 @@ $(function() {
 
     $('div#buildingView .info .increaseWorkers').live('click',function(event) {
         event.preventDefault();
-        var provinceId = $('.increaseWorkers, .decreaseWorkers').attr('pid');
-        var building_workers = $('.increaseWorkers, .decreaseWorkers').attr('workers');
-        var building_slot_index = $('.increaseWorkers, .decreaseWorkers').attr('sid');
-        var b0_food_by_worker = $('.increaseWorkers, .decreaseWorkers').attr('fbw');
+        var provinceId = $('.increaseWorkers').attr('pid');
+        var building_workers = $('.increaseWorkers').attr('workers');
+        var building_slot_index = $('.increaseWorkers').attr('sid');
+        var b0_food_by_worker = $('.increaseWorkers').attr('fbw');
         var workersCnt = parseInt(building_workers) + 1;
+        $('.increaseWorkers, .decreaseWorkers').attr('workers', workersCnt);
         $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
             var r = null;
             if((r = parseJSON(data)) === undefined) {
@@ -112,11 +113,12 @@ $(function() {
     });
     $('div#buildingView .info .decreaseWorkers').click(function(event) {
         event.preventDefault();
-        var provinceId = $('.increaseWorkers, .decreaseWorkers').attr('pid');
-        var building_workers = $('.increaseWorkers, .decreaseWorkers').attr('workers');
-        var building_slot_index = $('.increaseWorkers, .decreaseWorkers').attr('sid');
-        var b0_food_by_worker = $('.increaseWorkers, .decreaseWorkers').attr('fbw');
+        var provinceId = $('.decreaseWorkers').attr('pid');
+        var building_workers = $('.decreaseWorkers').attr('workers');
+        var building_slot_index = $('.decreaseWorkers').attr('sid');
+        var b0_food_by_worker = $('.decreaseWorkers').attr('fbw');
         var workersCnt = parseInt(building_workers) - 1;
+        $('.increaseWorkers, .decreaseWorkers').attr('workers', workersCnt);
         $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
             var r = null;
             if((r = parseJSON(data)) === undefined) {
