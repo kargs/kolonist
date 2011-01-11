@@ -62,6 +62,12 @@ $(function() {
             $('button', this).button();
         }
     });
+    $('div#buildingUpgrader .upgradeAction').live('click', function(event) {
+        event.preventDefault();
+        var pid = $(this).attr('pid');
+        var sid = $(this).attr('sid');
+        upgradeBuilding(pid, sid);
+    });
 
     $('div#buildingChooser .buildItem .more span').live('click', function(event) {
         var $elem = $(this);
@@ -85,7 +91,46 @@ $(function() {
         createBuilding(pid, sid, btype);
         $('div#buildingChooser').dialog('close');
     });
+
+
+    $('div#buildingView .info .increaseWorkers').live('click',function(event) {
+        event.preventDefault();
+        var provinceId = $('.increaseWorkers, .decreaseWorkers').attr('pid');
+        var building_workers = $('.increaseWorkers, .decreaseWorkers').attr('workers');
+        var building_slot_index = $('.increaseWorkers, .decreaseWorkers').attr('sid');
+        var b0_food_by_worker = $('.increaseWorkers, .decreaseWorkers').attr('fbw');
+        var workersCnt = parseInt(building_workers) + 1;
+        $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
+            var r = null;
+            if((r = parseJSON(data)) === undefined) {
+                return;
+            }
+            currentBuilding.workers = workersCnt;
+            $('div#buildingView .info .workers').html(workersCnt);
+            _renderFoodConsumed(workersCnt, b0_food_by_worker);
+        });
+    });
+    $('div#buildingView .info .decreaseWorkers').click(function(event) {
+        event.preventDefault();
+        var provinceId = $('.increaseWorkers, .decreaseWorkers').attr('pid');
+        var building_workers = $('.increaseWorkers, .decreaseWorkers').attr('workers');
+        var building_slot_index = $('.increaseWorkers, .decreaseWorkers').attr('sid');
+        var b0_food_by_worker = $('.increaseWorkers, .decreaseWorkers').attr('fbw');
+        var workersCnt = parseInt(building_workers) - 1;
+        $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
+            var r = null;
+            if((r = parseJSON(data)) === undefined) {
+                return;
+            }
+            currentBuilding.workers = workersCnt;
+            $('div#buildingView .info .workers').html(workersCnt);
+            _renderFoodConsumed(workersCnt, b0_food_by_worker);
+        });
+    });
+
 });
+
+var currentBuilding = null;
 
 /**
  * @return true | Array of missed resource: [resourceName] = 4; (cnt missed)
@@ -113,16 +158,27 @@ function showBuildingUpgrader(provinceId, building, resources) {
     var b0 = buildings[building.type][building.level];
     var b1 = buildings[building.type][parseInt(building.level)+1];
     var isMaxLevel = false;
+    var bable = new Array();
     if(b1 === undefined) {
         isMaxLevel = true;
+    } else {
+        bable = _isBuildAble(b1, resources);
     }
-    var bable = _isBuildAble(b1, resources);
     var isUpgradeAble = !isArray(bable);
     var $dlg = $('div#buildingUpgrader');
+    $('div#buildingUpgrader .upgradeAction').attr('pid', provinceId);
+    $('div#buildingUpgrader .upgradeAction').attr('sid', building.slot_index);
     if(isUpgradeAble) {
         $('.upgrader', $dlg).removeClass('noRes');
     } else {
-        $('.upgrader', $dlg).addClass('noRes');
+        if(!isMaxLevel) {
+            $('.upgrader', $dlg).addClass('noRes');
+        }
+    }
+    if(!isMaxLevel) {
+        $('.upgrader', $dlg).removeClass('maxLevel');
+    } else {
+        $('.upgrader', $dlg).addClass('maxLevel');
     }
     $('.type', $dlg).html(translate(b0.type));
     $('.level', $dlg).html(translate(b0.level));
@@ -291,35 +347,11 @@ function showBuilding(provinceId, building, resources) {
 
     var $bv = $('div#buildingView .info');
     $('.workers', $bv).html(building.workers);
-    $('.increaseWorkers', $bv).click(function(event) {
-        event.preventDefault();
-        event.preventBubble();
-        var workersCnt = parseInt(building.workers) + 1;
-        $.get('json/attachworkers/'+provinceId+'/'+building.slot_index+'/'+workersCnt, function(data) {
-            var r = null;
-            if((r = parseJSON(data)) === undefined) {
-                return;
-            }
-            building.workers = workersCnt;
-            $('.workers', $bv).html(workersCnt);
-            _renderFoodConsumed(workersCnt, b0.food_by_worker);
-        });
-    });
-
-    $('.decreaseWorkers', $bv).click(function(event) {
-        event.preventDefault();
-        var workersCnt = parseInt(building.workers) - 1;
-        $.get('json/attachworkers/'+provinceId+'/'+building.slot_index+'/'+workersCnt, function(data) {
-            var r = null;
-            if((r = parseJSON(data)) === undefined) {
-                return;
-            }
-            building.workers = workersCnt;
-            $('.workers', $bv).html(workersCnt);
-            _renderFoodConsumed(workersCnt, b0.food_by_worker);
-        });
-    });
-    
+    $('.increaseWorkers, .decreaseWorkers').attr('pid', provinceId);
+    $('.increaseWorkers, .decreaseWorkers').attr('workers', building.workers);
+    $('.increaseWorkers, .decreaseWorkers').attr('sid', building.slot_index);
+    $('.increaseWorkers, .decreaseWorkers').attr('fbw', b0.food_by_worker);
+    currentBuilding = building;
     $('div#buildingView').dialog('open');
 }
 function _renderFoodConsumed(workers, food_by_worker) {

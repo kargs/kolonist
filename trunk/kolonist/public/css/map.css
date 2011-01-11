@@ -587,6 +587,24 @@ fieldset.battle div.content div.scroll {
 #buildingUpgrader .noRes .upgrateUnable {
     display: block;
 }
+#buildingUpgrader .maxLevelAchived {
+    display: none;
+    text-align: center;
+    color: white;
+    border: red 1px solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background: orange;
+    float: right;
+    width: 140px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px;
+}
+#buildingUpgrader .maxLevel .maxLevelAchived {
+    display: block;
+}
 #buildingUpgrader .comparerWrapper {
     border: black 1px solid;
     border-radius: 10px;
