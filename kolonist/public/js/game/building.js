@@ -104,6 +104,7 @@ $(function() {
         $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
             var r = null;
             if((r = parseJSON(data)) === undefined) {
+                $('.increaseWorkers, .decreaseWorkers').attr('workers', building_workers);
                 return;
             }
             currentBuilding.workers = workersCnt;
@@ -122,6 +123,7 @@ $(function() {
         $.get('json/attachworkers/'+provinceId+'/'+building_slot_index+'/'+workersCnt, function(data) {
             var r = null;
             if((r = parseJSON(data)) === undefined) {
+                $('.increaseWorkers, .decreaseWorkers').attr('workers', building_workers);
                 return;
             }
             currentBuilding.workers = workersCnt;
